@@ -9,7 +9,7 @@ c = Configs
 
 token = "MTI5MjkyNzAxMDc5NjIwODIzMA.G5Aqt1.ecmiT82DPzPlhxpkoCqkjHWknoLgoVj4c3AOBQ"
 
-statuses = ["Gready atm","I am the sin of Greed","🤑💶💸💳","Slide me the money","Dead from your Poison","Sponsored by I.M.P"]
+statuses = ["Gready atm","I am the sin of Greed","🤑💶💸💳","Dead from your Poison","Sponsored by I.M.P","I eat Money for Breakfasy"]
 
 status = cycle(statuses)
 
