@@ -1,13 +1,14 @@
 import discord
 from discord.ext import commands,tasks
 from discord import app_commands
-from config import Configs
 from itertools import cycle
 
-c = Configs
+#Variables
 
 
-token = "MTI5MjkyNzAxMDc5NjIwODIzMA.G5Aqt1.ecmiT82DPzPlhxpkoCqkjHWknoLgoVj4c3AOBQ"
+
+with open("token.txt","r") as t:
+    token = t.read()
 
 statuses = ["Gready atm","I am the sin of Greed","🤑💶💸💳","Dead from your Poison","Sponsored by I.M.P","I eat Money for Breakfasy"]
 
@@ -30,9 +31,9 @@ async def on_ready():
     
     
     
-@tree.command(name="collect",description="collect your salary")
+'''@tree.command(name="collect",description="collect your salary")
 async def collect(userid,user_roles):
-    return
+    return'''
     
 
 

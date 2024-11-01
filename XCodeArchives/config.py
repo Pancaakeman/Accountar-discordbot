@@ -51,8 +51,8 @@ class Configs():
         self.conn.close()
 
 # Example usage
-db = Configs("DataWarehouse.db")
-db.create_table("Basedata",columns="userid INT, wallet INT,bank INT")
+#db = Configs("DataWarehouse.db")
+#db.create_table("Basedata",columns="userid INT, wallet INT,bank INT")
 #result = db.fetch_all("Basedata", "userid > 0")  # Adjust condition as needed
 #print( result)
 #db.close()
