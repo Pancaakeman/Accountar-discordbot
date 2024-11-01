@@ -1,9 +1,11 @@
 import discord
 from discord.ext import commands,tasks
-from discord import app_commands
+from discord import app_commands,interactions
 from itertools import cycle
+from Worker import Karamchari
 
 #Variables
+k = Karamchari
 
 
 
@@ -27,16 +29,31 @@ async def change_status():
 async def on_ready(): 
     change_status.start() 
     await tree.sync()
-    await print(f'Logged in as {client.user}!') 
     
     
     
-'''@tree.command(name="collect",description="collect your salary")
-async def collect(userid,user_roles):
-    return'''
+    
+@tree.command(name="enroll",description="Creates an account for you")
+async def enrollment(interaction :discord.interactions,):
+    try:
+        k.create_acc(userid=interaction.user.id)
+        embedd= discord.Embed(title=f"A bank account has been successfully created for you under the name {interaction.user}.\nWelcome aboard!")
+        await interaction.response.send_message(embed = embedd)
+    
+    except Exception as e: 
+        print(e)
+        error = discord.Embed(title="Error Contact Pancakes",description=" ")
+        error.set_footer(text="sowwy")
+        await interaction.response.send_message(embed = error)
     
 
 
-    
+
+
+
+
+
+
+
     
 client.run(token)

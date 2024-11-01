@@ -11,9 +11,10 @@ class Karamchari:
     async def create_acc(userid):
         await c.execute("""CREATE TABLE IF NOT EXISTS money (
             User INT PRIMARY KEY,
+            Special text
             Bank INT)""")
         
-        await c.execute('INSERT INTO money(User,money) VALUES (?,?)',(userid,0))
+        await c.execute('INSERT INTO money(User,Bank) VALUES (?,?)',(userid,0))
         
         
         
@@ -24,5 +25,3 @@ class Karamchari:
     
     
  
-Karamchari.create_acc(1234567890)
-    
