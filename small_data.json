@@ -1,7 +1,14 @@
 {
-    "symbols": [
+    "variable": [
         {
             "global_collect": "2024-02-08 00:00:00.648900"
         }
-    ]
+    ],
+
+    "admins":
+        {
+            "username": "pancaakeman",
+            "userid": ""
+        }
+    
 }
