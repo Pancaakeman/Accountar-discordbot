@@ -1,8 +1,5 @@
-import discord
 import aiosqlite
-import sqlite3
-import asyncio
-
+import datetime
 
 class Karamchari:
     def __init__(self,database_file):
@@ -11,11 +8,7 @@ class Karamchari:
 
    
     async def create_acc(self,userid):
-        conn = await aiosqlite.connect(self.database_file)
-        await conn.execute("""CREATE TABLE IF NOT EXISTS money (
-                                User INT PRIMARY KEY,
-                                Bank INT)""")
-        
+        conn = await aiosqlite.connect(self.database_file)      
            
         check = await conn.execute(f"SELECT * FROM money WHERE User = ?",(userid,))
         check = await check.fetchone()
@@ -29,10 +22,6 @@ class Karamchari:
             
     async def display_bank(self,userid):
         conn = await aiosqlite.connect(self.database_file)
-        await conn.execute("""CREATE TABLE IF NOT EXISTS money (
-                                User INT PRIMARY KEY,
-                                Bank INT
-                                )""")
         check = await conn.execute(f"SELECT * FROM money WHERE User = ?",(userid,))
         check = await check.fetchone()
         
@@ -49,11 +38,8 @@ class Karamchari:
             
         
     async def add_salary_role(self,role,income):
-        conn = await aiosqlite.connect(self.database_file)
-        await conn.execute("""CREATE TABLE IF NOT EXISTS roles (
-                                Role INT PRIMARY KEY,
-                                Income INT)""")
         
+        conn = await aiosqlite.connect(self.database_file)
         check = await conn.execute(f"SELECT * FROM roles WHERE Role = ?",(role,))
         check = await check.fetchone()
         
@@ -69,8 +55,31 @@ class Karamchari:
             await conn.close()
             return not None     
         
-    async def collect(userid,user_roles):
-        return
+    async def collect(self,user,role):
+          
+        conn = await aiosqlite.connect(self.database_file)
+        check = await conn.execute(f"SELECT * FROM roles WHERE Role = ?",(role,))
+        check = await check.fetchone()
+        
+        if check is None:
+            return None
+        
+        elif check is not None:      
+                income = check[1]
+                
+                user_check = await conn.execute("SELECT * FROM money WHERE User = ?", (user,)) 
+                user_check = await user_check.fetchone() 
+
+                new_balance = user_check[1] + income
+                await conn.execute('UPDATE money SET Bank = ? WHERE User = ?', (new_balance,user))
+                
+                time_check = await conn.execute("SELECT * FROM history WHERE User = ?",(user,))
+                return True
+            
+
+        await conn.commit()
+        await conn.close()      
+        return role,income
 
 
 
