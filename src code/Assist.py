@@ -12,10 +12,17 @@ class Assister:
         check = await check.fetchone()
         
         if check is None:
-            await conn.execute('INSERT INTO history(User,Last_collect) VALUES (?,?)',(userid,1))
+            await conn.execute('INSERT INTO history(User,Last_collect) VALUES (?,?)',(userid,0))
+            await conn.commit()
+            await conn.close()
             return not None
         else:
             return None
+        
+    async def id_add(self,userid):
+        with open("./src code/userlist.txt","w") as f:
+            f.write(f"\n{userid}")
+            f.close()
         
     async def create_table(self):
         conn = await aiosqlite.connect(self.database_file)
@@ -32,10 +39,10 @@ class Assister:
                                 User INT PRIMARY KEY,
                                 Last_collect INT
                                 )""")
+
         
         await conn.commit()
         await conn.close()
-        
     async def wage_list(self):
         conn = await aiosqlite.connect(self.database_file)
         check = await conn.execute("SELECT * FROM roles")
@@ -50,9 +57,12 @@ class Assister:
             for row in rows:
                 return row
             
-    async def reset_collect(self):
+    async def daily_reset_collect(self,userid):
         conn = await aiosqlite.connect(self.database_file)
-        #check = await
+    #   for  in 
+    #        await conn.execute('UPDATE money SET Bank = ? WHERE User = ?', (1,))
+        return True
+        
         return
 
 

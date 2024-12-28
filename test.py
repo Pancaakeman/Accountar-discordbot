@@ -14,15 +14,12 @@ import datetime
 
 def time_check():
     current = datetime.datetime.now()
-    reset_time = datetime.datetime(year = current.year, month = current.month, day= current.day)
-    time_left = reset_time - current
-    if time_left != 0:
-        print("sent")
-        print(time_left)
-        #embed = discord.Embed(title="You have already collected",description=f"You can collect again in {time_left}")
-        #await interaction.response.send_message(embed = embed)
-        return False
+    reset_time = datetime.datetime(year = current.year, month = current.month, day= current.day,hour=00,minute=00,second=00)
+    #time_left = reset_time - current
+    if current > reset_time:
+        print("can collect")
     else: 
-        return True
+        print("cant collect")
+    #print(time_left)
     
 time_check()

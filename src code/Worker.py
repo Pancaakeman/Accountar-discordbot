@@ -14,11 +14,13 @@ class Karamchari:
         check = await check.fetchone()
         if check is None:
             await conn.execute('INSERT INTO money(User,Bank) VALUES (?,?)',(userid,0))
-                                       
+            await conn.commit()
+            await conn.close()
+            return not None                       
+        
         else:
-            return not None
-        await conn.commit()
-        await conn.close()
+            return None
+
             
     async def display_bank(self,userid):
         conn = await aiosqlite.connect(self.database_file)
@@ -64,7 +66,8 @@ class Karamchari:
         if check is None:
             return None
         
-        elif check is not None:      
+        elif check is not None:  
+            
                 income = check[1]
                 
                 user_check = await conn.execute("SELECT * FROM money WHERE User = ?", (user,)) 
@@ -73,7 +76,7 @@ class Karamchari:
                 new_balance = user_check[1] + income
                 await conn.execute('UPDATE money SET Bank = ? WHERE User = ?', (new_balance,user))
                 
-                time_check = await conn.execute("SELECT * FROM history WHERE User = ?",(user,))
+                
                 return True
             
 
