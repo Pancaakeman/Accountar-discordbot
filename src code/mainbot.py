@@ -60,29 +60,41 @@ async def admin_check(interaction):
             embed = discord.Embed(title="🔒 Unauthorised")
             embed.add_field(name="This Command is for admin use only!")
             await interaction.response.send_message(embed = embed)
-            
-async def time_check(interaction):
-    current = datetime.datetime.now()
-    reset_time = datetime.datetime(year = current.year, month = current.month, day= current.day,hour=00,minute=00,second=00)
-    time_left = reset_time - current
-    if time_left <= 0:
-        embed = discord.Embed(title="You have already collected",description=f"You can collect again in {time_left}")
-        await interaction.response.send_message(embed = embed)
-        return False
-    else: 
-        return True
-    
+                
 async def check_collect_reset():
     while True:
-        current = datetime.datetime.now()
-        reset_time = datetime.datetime(year = current.year, month = current.month, day= current.day,hour=00,minute=00,second=00)
-        if current >= reset_time:
-            return True
-        if current < reset_time:
-            return False
+        current = datetime.datetime.now() 
+        reset_time = datetime.datetime(year=current.year, month=current.month, day=current.day, hour=0, minute=0, second=0) 
+        if current >= reset_time: 
+            await a.daily_reset_collect() 
+            await asyncio.sleep(86400)
+        else: 
+            time_until_reset = (reset_time - current).total_seconds() 
+            await asyncio.sleep(time_until_reset) 
+            await a.daily_reset_collect()
+            await asyncio.sleep(86400)
+            
 #------------------------------------------
 #EVENTS
 #------------------------------------------
+@tasks.loop(seconds=30)
+async def change_status(): 
+    await client.change_presence(status=discord.Status.online)
+    await client.change_presence(activity=discord.CustomActivity(name=next(status)))
+    
+
+
+    
+
+@client.event 
+async def on_ready(): 
+    change_status.start()
+    await tree.sync()
+    print("Tree synced")
+    await check_collect_reset()
+
+    
+    
 
     
     
@@ -148,7 +160,7 @@ async def view(interaction :discord.interactions):
             )
             embed.add_field(
                 name="💵 Money in Bank:",
-                value=f"₹{bank_value}",
+                value=f"£{bank_value}",
                 inline=False
             )
             embed.set_footer(text=f"You are in the {interaction.guild.name} Branch")
@@ -196,10 +208,9 @@ async def pay_role(interaction : discord.interactions,role :discord.Role, income
     
 @tree.command(name="collect",description="Collects the Salary for your roles")
 async def collection(interaction : discord.interactions):
-    #try: 
+    try: 
 
-        reset = str(reset)
-        current = str(current)       
+ 
         role_id = [role.id for role in interaction.user.roles]
         for roles in role_id:
             check = await k.collect(role=roles,user = interaction.user.id)
@@ -207,25 +218,31 @@ async def collection(interaction : discord.interactions):
 
             
             if check is not None:
-                if time_check(interaction) is True:
+                if await a.check_collect_history(userid = interaction.user.id) is not True:
                     rol = check[0]
+                    print(rol)
                     role_ping = interaction.guild.get_role(rol) 
-                    
+                    print(role_ping)
+            
                     income = check[1]
                     collected_any = True
                     role_embed = discord.Embed(title="Income Collected!",color=discord.Color.dark_teal())
                     role_embed.add_field(name=f"Pay Role: {role_ping}",value=f"Income collected: {income}",inline=False)
                     await interaction.channel.send(embed = role_embed)   
-        
+                else:
+                    current = datetime.datetime.now() 
+                    reset_time = datetime.datetime(year=current.year, month=current.month, day=current.day, hour=0, minute=0, second=0) 
+                    left = current - reset_time
+                    embed = discord.Embed(title="⚠️You have already Collected!⚠️",description=f"Try again in {left}",color=discord.Color.brand_red())
         
         if collected_any is not True:
             embed = discord.Embed(title="You Don't have any Pay roles!!",color=discord.Color.teal())
             embed.set_footer(text="If you think this is a mistake, Contact an Admin")
             await interaction.response.send_message(embed = embed)   
                   
-   #except Exception as e:
-    #    print(e)
-    #    await interaction.response.send_message(embed = error)
+    except Exception as e:
+        print(e)
+        await interaction.response.send_message(embed = error)
         
 @tree.command(name="create_table",description="[ADMIN ONLY] Creates all required Tables for the bot to function")
 async def create_table(interaction : discord.interactions):

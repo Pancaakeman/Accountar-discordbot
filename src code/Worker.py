@@ -77,11 +77,9 @@ class Karamchari:
                 await conn.execute('UPDATE money SET Bank = ? WHERE User = ?', (new_balance,user))
                 
                 
-                return True
-            
 
         await conn.commit()
-        await conn.close()      
+        await conn.close()
         return role,income
 
 
