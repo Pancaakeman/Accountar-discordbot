@@ -7,7 +7,7 @@ class Assister:
         
         
     async def id_add(self,userid):
-        with open("./src code/userlist.txt","w") as f:
+        with open("./src code/userlist.txt","a") as f:
             f.write(f"{userid}\n")
             f.close()
         
@@ -61,7 +61,7 @@ class Assister:
             await conn.close()
             for row in rows:
                 return row
-            
+#ALL OF THIS IS FOR COLLECT         
     async def daily_reset_collect(self):
         conn = await aiosqlite.connect(self.database_file)
         with open("D:/Code/Python/Discord-Economy-Bot/src code/Assist.py") as file:
@@ -83,6 +83,15 @@ class Assister:
         else:
             await conn.close()
             return True
-    
+    async def role_check_collect(self,roles):
+        conn = await aiosqlite.connect(self.database_file)
+        role_check = await conn.execute(f"SELECT * FROM roles WHERE Role = ?",(roles,))
+        role_check = await role_check.fetchone()
 
+        
+        if role_check is not None:
+            return not None
+        else:
+            return None
+#COLLECT ENDS HERE      
 

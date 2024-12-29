@@ -47,7 +47,9 @@ class Karamchari:
         
         
         if check is None:
-            await conn.execute('INSERT INTO roles(Role,Income) VALUES (?,?)',(role,income,))
+            test = await conn.execute('INSERT INTO roles(Role,Income) VALUES (?,?)',(role,income,))
+            check = await conn.execute(f"SELECT * FROM roles WHERE Role = ?",(role,))
+            check = await check.fetchone()
             await conn.commit()
             await conn.close()
 
@@ -61,23 +63,13 @@ class Karamchari:
           
         conn = await aiosqlite.connect(self.database_file)
         check = await conn.execute(f"SELECT * FROM roles WHERE Role = ?",(role,))
-        check = await check.fetchone()
-        
-        if check is None:
-            return None
-        
-        elif check is not None:  
-            
-                income = check[1]
-                
-                user_check = await conn.execute("SELECT * FROM money WHERE User = ?", (user,)) 
-                user_check = await user_check.fetchone() 
-
-                new_balance = user_check[1] + income
-                await conn.execute('UPDATE money SET Bank = ? WHERE User = ?', (new_balance,user))
-                
-                
-
+        check = await check.fetchone()            
+        income = check[1]
+        user_check = await conn.execute("SELECT * FROM money WHERE User = ?", (user,)) 
+        user_check = await user_check.fetchone() 
+        new_balance = user_check[1] + income
+        await conn.execute('UPDATE money SET Bank = ? WHERE User = ?', (new_balance,user))
+        await conn.execute('UPDATE history SET Last_collect = ? WHERE User = ?',(1,user))
         await conn.commit()
         await conn.close()
         return role,income
