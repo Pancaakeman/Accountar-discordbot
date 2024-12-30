@@ -92,6 +92,23 @@ class Karamchari:
             await conn.commit()
             await conn.close()
             
+    async def coinflip_win(self,user,amount):
+        conn = await aiosqlite.connect(self.database_file)
+        check = await conn.execute(f"SELECT * FROM money WHERE User = ?",(user,))
+        check = await check.fetchone()
+        new_balance = check[1] + amount
+        await conn.execute('UPDATE money SET Bank = ? WHERE User = ?',(new_balance,user))
+        await conn.commit()
+        await conn.close()
+        
+    async def coinflip_lose(self,user,amount):
+        conn = await aiosqlite.connect(self.database_file)
+        check = await conn.execute(f"SELECT * FROM money WHERE User = ?",(user,))
+        check = await check.fetchone()
+        new_balance = check[1] - amount
+        await conn.execute('UPDATE money SET Bank = ? WHERE User = ?',(new_balance,user))
+        await conn.commit()
+        await conn.close()
 
 
 

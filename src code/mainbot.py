@@ -6,6 +6,7 @@ from itertools import cycle
 from Worker import Karamchari
 from Assist import Assister
 import datetime
+import random
 
 
 #Variables
@@ -79,8 +80,9 @@ async def check_collect_reset():
 async def account_check(interaction,user):
     check = await a.account_check(user = user)
     if check is None:
-        embed = discord.Embed(title="You Don't Have a Bank Account",description="Run `/enroll` to create one")
+        embed = discord.Embed(title=f"No Bank Account found!",description="Run `/enroll` to create one",color=discord.Color.red())
         embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
+        await interaction.response.send_message(embed=embed)
     else:    
         return not None
     
@@ -111,7 +113,6 @@ async def on_ready():
     
     
 @tree.command(name="enroll",description="Creates an account for yourself")
-@commands.cooldown(1,5)
 async def enrollment(interaction :discord.interactions):
     try:
         check1 = await k.create_acc(userid=interaction.user.id)
@@ -120,6 +121,7 @@ async def enrollment(interaction :discord.interactions):
         if check2 is not None and check1 is not None:
             await a.id_add(userid=interaction.user.id)
             embed= discord.Embed(title=f"A bank account has been successfully created for: {interaction.user.display_name}",colour=discord.Color.brand_green())
+            embed.add_field(name="Run `/account` to check out your account!")
             embed.set_footer(text="Welcome aboard!")
             embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
             await interaction.response.send_message(embed = embed)
@@ -133,34 +135,36 @@ async def enrollment(interaction :discord.interactions):
         await interaction.response.send_message(embed = error)
         
         
-@tree.command(name="bank_view",description="Allows you to view your or someone elses bank account")
-async def view(interaction :discord.interactions):
-
-
+@tree.command(name="account",description="Enables you to view your own or other people's bank accounts")
+async def view(interaction :discord.interactions,user : discord.Member = None):
     try:
-        if await account_check(interaction,user=interaction.user.id) is None:
+        if user is None:
+            user = interaction.user.id
+        
+        if await account_check(interaction,user=user.id) is None:
             return None
         else:
+            print(user)
                    
-            check = await k.display_bank(userid=interaction.user.id)
+            check = await k.display_bank(userid=user.id)
             bank_value = check[1]
             embed = discord.Embed(
                 title="🏦 Bank Details",
-                color=discord.Color.greyple()
+                color=discord.Color.dark_teal()
             )
             embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/2830/2830284.png")
             embed.add_field(
                 name="💵 Account Number:",
-                value=f"{interaction.user.id}",
+                value=f"{user.id}",
                 inline=True
             )
             embed.add_field(
                 name="💵 Account Holder:",
-                value=f"{interaction.user.display_name}",
+                value=f"{user.mention}",
                 inline=True
             )
             embed.add_field(
-                name="💵 Money in Bank:",
+                name="💵 Balance:",
                 value=f"£{bank_value}",
                 inline=False
             )
@@ -177,7 +181,7 @@ async def view(interaction :discord.interactions):
         await interaction.response.send_message(embed=error)
 
         
-@tree.command(name="setup_pay_role",description="[BOT ADMIN ONLY] Lets you create a Pay role")
+@tree.command(name="setup_income_role", description="[BOT ADMIN ONLY] Allows the establishment of an Income role")
 async def pay_role(interaction : discord.interactions,role :discord.Role, income: int):
     try:
         roleid = role.id
@@ -307,6 +311,35 @@ async def remove_money(interaction: discord.interactions,user: discord.Member,am
     except Exception as e:
         print(e)
         await interaction.response.send_message(embed = error)
+
+@tree.command(name="coinflip",description="Bet virtual money on a coinflip")
+async def coinflip(interaction: discord.interactions, wager: int):
+    try:
+        acc_check = await account_check(interaction=interaction,user=interaction.user.id)
+        if acc_check is not None:
+            mon_check =a.check_bal_coinflip(user= interaction.user.id,wager = wager)
+            if mon_check is not None:
+                flip = random.randint(0,1)
+                if flip == 0:
+                    k.coinflip_lose(user= interaction.user.id,amount=wager)
+                    print("loser")
+                else:
+                    k.coinflip_win(user=interaction.user.id,amount=wager * 1.64)
+                    print("winner") 
+            else:
+                print("poor bitch") 
+   
+
+    except Exception as e:
+        print(e)
+        await interaction.response.send_message(embed = error)
+        
+        
+#WORK ON LOGGING
+#WORK ON FRONT END
+#4 am Started JS arc
+
+
 client.run(token)
 
 

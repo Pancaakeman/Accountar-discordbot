@@ -109,5 +109,13 @@ class Assister:
             return not None
         else:
             return None
-#COLLECT ENDS HERE      
-
+#COLLECT ENDS HERE
+#COIN FLIP BEGINS HERE
+    async def check_bal_coinflip(self,user,wager):  
+        conn = await aiosqlite.connect(self.database_file)
+        check = await conn.execute("SELECT * FROM money WHERE User = ?",(user,))
+        check = check.fetchone()    
+        if wager > check:
+            return None
+        else:
+            return not None
