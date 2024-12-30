@@ -59,12 +59,13 @@ async def admin_check(interaction):
     if admin_req  != 1:
             embed = discord.Embed(title="🔒 Unauthorised")
             embed.add_field(name="This Command is for admin use only!")
+            embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
             await interaction.response.send_message(embed = embed)
                 
 async def check_collect_reset():
     while True:
         current = datetime.datetime.now()
-        reset_time = datetime.datetime(year=current.year, month=current.month, day=current.day, hour=15, minute=20, second=0)
+        reset_time = datetime.datetime(year=current.year, month=current.month, day=current.day, hour=0, minute=0, second=0)
         
         if current >= reset_time:
             reset_time = reset_time + datetime.timedelta(days=1)
@@ -74,6 +75,15 @@ async def check_collect_reset():
         await asyncio.sleep(time_until_reset)
         await a.daily_reset_collect()
         await asyncio.sleep(86400)
+        
+async def account_check(interaction,user):
+    check = await a.account_check(user = user)
+    if check is None:
+        embed = discord.Embed(title="You Don't Have a Bank Account",description="Run `/enroll` to create one")
+        embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
+    else:    
+        return not None
+    
 
             
 #------------------------------------------
@@ -128,22 +138,11 @@ async def view(interaction :discord.interactions):
 
 
     try:
-        interactor = interaction.user.id
-        check = await k.display_bank(userid=interactor)
-
-        if check is None:
-            embed = discord.Embed(
-                title="No Account Found!",
-                colour=discord.Color.orange()
-            )
-            embed.set_footer(text="If you think this is a mistake, message an Admin")
-            embed.set_author(
-                name=f"{interaction.user.name}",
-                icon_url=interaction.user.avatar.url
-            )
-            await interaction.response.send_message(embed=embed)
-        
+        if await account_check(interaction,user=interaction.user.id) is None:
+            return None
         else:
+                   
+            check = await k.display_bank(userid=interaction.user.id)
             bank_value = check[1]
             embed = discord.Embed(
                 title="🏦 Bank Details",
@@ -208,49 +207,47 @@ async def pay_role(interaction : discord.interactions,role :discord.Role, income
         print(e)
         await interaction.response.send_message(embed = error)    
     
-@tree.command(name="collect",description="Collects the Salary for your roles")
+@tree.command(name="collect",description="Lets you collect a salary for each of your roles")
 async def collection(interaction : discord.interactions):
-    try: 
-        collected = await a.check_collect_history(userid=interaction.user.id)     
+    try:
+        collected_any = False
+        acc_check = await account_check(interaction=interaction, user=interaction.user.id)
+        if acc_check is not None:
+            collected = await a.check_collect_history(userid=interaction.user.id)
 
-        if collected is True:
-            current = datetime.datetime.now() 
-            reset_time = datetime.datetime(year=current.year, month=current.month, day=current.day+1, hour=0, minute=0, second=0,microsecond=current.microsecond) 
-            left = reset_time - current
-            embed = discord.Embed(title="⚠️You have already Collected!⚠️",description=f"**Try again in `{left}`**",color=discord.Color.brand_red())
-            embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url)
-            await interaction.response.send_message(embed = embed)
             
-        elif collected is False:
-            role_ids = []
-            for role in interaction.user.roles:
-                role_ids.append(role.id)
-            for role in role_ids:
-                role_check = await a.role_check_collect(roles = role)
+            if collected is True:
+                current = datetime.datetime.now()
+                reset_time = datetime.datetime(year=current.year, month=current.month, day=current.day + 1, hour=0, minute=0, second=0, microsecond=current.microsecond)
+                left = reset_time - current
+                embed = discord.Embed(title="⚠️You have already Collected!⚠️", description=f"**Try again in `{left}`**", color=discord.Color.brand_red())
+                embed.set_author(name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url)
+                await interaction.response.send_message(embed=embed)
                 
-                if role_check is not None:
-                    command = await k.collect(role=role,user = interaction.user.id)
-                    role = command[0]
-                    role_ping = interaction.guild.get_role(role)             
-                    income = command[1]
-                    collected_any = True
-                    role_embed = discord.Embed(title="Income Collected!",color=discord.Color.dark_teal())
-                    role_embed.add_field(name=f"Pay Role: {role_ping}",value=f"Income collected: {income}",inline=False)
-                    role_embed.set_footer(text="Keep up the good work!",)
-                    role_embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url)
-                    role_embed.timestamp = datetime.datetime.now()
-                    await interaction.channel.send(embed = role_embed)   
-                       
-
+            else:
+                role_ids = [role.id for role in interaction.user.roles]
+                for role_id in role_ids:
+                    role_check = await a.role_check_collect(roles=role_id)
                     
-                    if collected_any is not True:
-                        fail_embed = discord.Embed(title="You Don't have any Pay roles!!",color=discord.Color.teal())
-                        fail_embed.set_footer(text="If you think this is a mistake, Contact an Admin")
-                        fail_embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url)
-                        await interaction.response.send_message(embed = fail_embed)   
-                    
-
-            
+                    if role_check is not None:
+                        command = await k.collect(role=role_id, user=interaction.user.id)
+                        role = command[0]
+                        role_ping = interaction.guild.get_role(role)
+                        income = command[1]
+                        collected_any = True
+                        role_embed = discord.Embed(title="Income Collected!", color=discord.Color.dark_teal())
+                        role_embed.add_field(name=f"Pay Role: {role_ping}", value=f"Income collected: **{income}**", inline=False)
+                        role_embed.set_footer(text="Keep up the good work!")
+                        role_embed.set_author(name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url)
+                        role_embed.timestamp = datetime.datetime.now()
+                        await interaction.channel.send(embed=role_embed)
+                
+                        
+                if not collected_any:
+                    fail_embed = discord.Embed(title="You Don't have any Pay roles!!", color=discord.Color.teal())
+                    fail_embed.set_footer(text="If you think this is a mistake, Contact an Admin")
+                    fail_embed.set_author(name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url)
+                    await interaction.channel.send(embed=fail_embed)
                 
     except Exception as e:
         print(e)
@@ -274,26 +271,42 @@ async def create_table(interaction : discord.interactions):
         print(e)
         await interaction.response.send_message(embed = error)
         
-'''@tree.command(name="wage_list",description="[ADMIN ONLY] Shows a list of all current Income roles")
-async def wage_list(interaction : discord.interactions):
+@tree.command(name="add_money",description="[ADMIN ONLY] Allows you to add money to any user's account")
+async def add_money(interaction: discord.interactions,user: discord.Member,addition: int):
     try:
         admin = await admin_check(interaction)
-        if admin == 1:
-            check = await a.wage_list()
-            
-            if check is None:
-                embed = discord.Embed(title="No Income Roles Found",description="‎ ",color=discord.Color.dark_gold())
-                embed.set_footer(name="If you think this is a mistake, Contact an Admin")
+        if admin == 1: 
+            acc_check = await account_check(interaction=interaction,user=user.id)
+            if acc_check is not None:
+                await k.add_money(user=user.id,add=addition)
+                embed = discord.Embed(title="Money Added!",description=f"Added **£{addition}** to user {user.mention}",color=discord.Color.dark_green())
+                embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/2936/2936758.png")
+                embed.add_field(name="Updated By:", value=interaction.user.mention, inline=False)
                 embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
-                await interaction.response.send_message(embed = embed)        
-            if check is not None:
-                embed 
+                await interaction.response.send_message(embed = embed)
             
     except Exception as e:
         print(e)
-        await interaction.response.send_message(error)
-'''
-
-
-    
+        await interaction.response.send_message(embed = error)
+                
+@tree.command(name="remove_money",description="[ADMIN ONLY] Allows you to remove money from any user's account")
+async def remove_money(interaction: discord.interactions,user: discord.Member,amount: int):
+    try:
+        admin = await admin_check(interaction)
+        if admin == 1: 
+            acc_check = await account_check(interaction=interaction,user=user.id)
+            if acc_check is not None:
+                await k.remove_money(user=user.id,amount = amount)
+                embed = discord.Embed(title="Money Removed",description=f"Removed **£{amount}** from user {user.mention}",color=discord.Color.dark_red())
+                embed.set_thumbnail(url="https://www.flaticon.com/free-icon/loss_2936762")
+                embed.add_field(name="Updated By:", value=interaction.user.mention, inline=False)
+                embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
+                await interaction.response.send_message(embed = embed)
+                
+                
+    except Exception as e:
+        print(e)
+        await interaction.response.send_message(embed = error)
 client.run(token)
+
+

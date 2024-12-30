@@ -26,14 +26,9 @@ class Karamchari:
         conn = await aiosqlite.connect(self.database_file)
         check = await conn.execute(f"SELECT * FROM money WHERE User = ?",(userid,))
         check = await check.fetchone()
-        
-        if check is None:
-            await conn.close()
-            return None
-            
-        else:
-            await conn.close()
-            return check 
+             
+        await conn.close()
+        return check 
         
         
 
@@ -73,6 +68,30 @@ class Karamchari:
         await conn.commit()
         await conn.close()
         return role,income
+    
+    async def add_money(self,user,add):
+        conn = await aiosqlite.connect(self.database_file)
+        check = await conn.execute(f"SELECT * FROM money WHERE User = ?",(user,))
+        check = await check.fetchone()
+        if check is not None:
+            balance = check[1]
+            new_balance = balance + add
+            await conn.execute('UPDATE money SET Bank = ? WHERE User = ?',(new_balance,user))
+            await conn.commit()
+            await conn.close()
+            
+            
+    async def remove_money(self,user,subtract):
+        conn = await aiosqlite.connect(self.database_file)
+        check = await conn.execute(f"SELECT * FROM money WHERE User = ?",(user,))
+        check = await check.fetchone()
+        if check is not None:
+            balance = check[1]
+            new_balance = balance - subtract
+            await conn.execute('UPDATE money SET Bank = ? WHERE User = ?',(new_balance,user))
+            await conn.commit()
+            await conn.close()
+            
 
 
 

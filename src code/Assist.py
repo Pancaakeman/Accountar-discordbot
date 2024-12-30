@@ -61,18 +61,34 @@ class Assister:
             await conn.close()
             for row in rows:
                 return row
+            
+            
+    async def account_check(self,user):
+        conn = await aiosqlite.connect(self.database_file)
+        check = await conn.execute("SELECT * FROM money WHERE User = ?",(user,))
+        check = await check.fetchone()
+        await conn.close()
+        
+        if check is None:
+            return None
+        else:
+            return False
 #ALL OF THIS IS FOR COLLECT         
+    import aiosqlite
+
     async def daily_reset_collect(self):
         conn = await aiosqlite.connect(self.database_file)
-        with open("D:/Code/Python/Discord-Economy-Bot/src code/Assist.py") as file:
+   
+        with open("D:/Code/Python/Discord-Economy-Bot/userlist.txt") as file:
             lines = file.read().splitlines()
+            for user_id in lines:
+                await conn.execute('UPDATE history SET Last_collect = ? WHERE User = ?',(0,user_id))
             
-            for i in lines:            
-                await conn.execute('UPDATE history SET Last_collect  = ? WHERE User = ?', (0,i))
-            file.close()
             await conn.commit()
             await conn.close()
-            return True
+
+        return True
+
     async def check_collect_history(self,userid):
         conn = await aiosqlite.connect(self.database_file)
         check = await conn.execute("SELECT * FROM history WHERE User = ?",(userid,))
