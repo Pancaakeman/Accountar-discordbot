@@ -1,9 +1,9 @@
 import discord
 import asyncio
-from discord.ext import commands,tasks
-from discord import app_commands,interactions
+from discord.ext import tasks
+from discord import app_commands
 from itertools import cycle
-from Worker import Karamchari
+from Worker import Worker
 from Assist import Assister
 import datetime
 import random
@@ -16,8 +16,8 @@ RESET_TIME = datetime.time(hour=0,minute=0,second=0)
 
 
 
-k = Karamchari("Warehouse.db")
-a = Assister("Warehouse.db")
+k = Worker("src code\Databases\Warehouse.db")
+a = Assister("src code\Databases\Warehouse.db")
 error = discord.Embed( title="🚨 Internal Error 🚨", description="Something went wrong! Please open a ticket to report the issue and we'll get it resolved as soon as possible.", color=discord.Colour.red())
 
         
@@ -312,22 +312,30 @@ async def remove_money(interaction: discord.interactions,user: discord.Member,am
         print(e)
         await interaction.response.send_message(embed = error)
 
-@tree.command(name="coinflip",description="Bet virtual money on a coinflip")
+@tree.command(name="gamble",description="Gamble virtual money for a chance to double your money or lose it all")
 async def coinflip(interaction: discord.interactions, wager: int):
     try:
         acc_check = await account_check(interaction=interaction,user=interaction.user.id)
         if acc_check is not None:
-            mon_check =a.check_bal_coinflip(user= interaction.user.id,wager = wager)
+            mon_check =a.check_bal(user= interaction.user.id,amount= wager)
             if mon_check is not None:
                 flip = random.randint(0,1)
                 if flip == 0:
                     k.coinflip_lose(user= interaction.user.id,amount=wager)
-                    print("loser")
+                    embed = discord.Embed(title="❌You Lost!",description=f"Money lost: {wager}",color=discord.Color.brand_red())
+                    embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/6448/6448481.png")
+                    embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
+                    
                 else:
-                    k.coinflip_win(user=interaction.user.id,amount=wager * 1.64)
-                    print("winner") 
+                    k.coinflip_win(user=interaction.user.id,amount=wager * 2)
+                    embed = discord.Embed(title="🥇You Won!",description=f"Money won: {wager * 2}",color=discord.Color.blue())
+                    embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/4937/4937998.png")
+                    embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
             else:
-                print("poor bitch") 
+                embed = discord.Embed(title="😷Too Poor!",description=f"Earn More money or lower your wager",color=discord.Color.brand_red())
+                embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/8125/8125441.png")
+                embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
+                
    
 
     except Exception as e:
@@ -336,8 +344,7 @@ async def coinflip(interaction: discord.interactions, wager: int):
         
         
 #WORK ON LOGGING
-#WORK ON FRONT END
-#4 am Started JS arc
+#WORK ON RAFFLE
 
 
 client.run(token)
