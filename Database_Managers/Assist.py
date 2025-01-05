@@ -1,5 +1,6 @@
 import aiosqlite
-
+import discord
+ADMINS = [732513701147574322,959729939370868766]
 
 class Assister:
     def __init__(self,database_file):
@@ -98,3 +99,13 @@ class Assister:
                     return None
                 else:
                     return not None
+                
+    async def admin_check(interaction):
+        admin_req = 0
+        for id in list(ADMINS):
+            if interaction.user.id == id:
+                admin_req = 1
+                return 1
+                
+        if admin_req  != 1:
+                return 0
