@@ -61,7 +61,7 @@ async def load():
 async def main():
     async with bot:
         await load()
-        await bot.start("MTI4MDEyODYxNzMxMjk0NDE0OA.GCQQ9K.wASuc-RvRcKepRwQn7ERgBdtkboaGyz4G5pue4")
+        await bot.start(token)
 
         
         
