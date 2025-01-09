@@ -1,0 +1,30 @@
+{
+  "licenses": [  
+    {
+      "name": "Fishing License",
+      "value":"Fishing License",
+      "price": 50,
+      "description": "Allows the holder to fish in designated areas."
+    },
+    {
+      "name": "Hunting License",
+      "value":"Hunting License",
+      "price": 100,
+      "description": "Grants permission to hunt in approved zones."
+    },
+    {
+      "name": "Business License",
+      "value":"Business License",
+      "price": 1000,
+      "description": "Required to legally operate a business."
+    },
+    {
+      "name": "Marriage License",
+      "value":"Marriage License",
+      "price": 60,
+      "description": "Legal document required for marriage."
+    }
+  ]
+  }
+
+

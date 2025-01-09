@@ -1,11 +1,9 @@
 import discord
 import asyncio
 from discord.ext import tasks,commands
-from discord import app_commands
 from itertools import cycle
 from Database_Managers import Assister, Worker
 import datetime
-import random
 import os
 
 #Variables
@@ -17,14 +15,19 @@ RESET_TIME = datetime.time(hour=0,minute=0,second=0)
 
 k = Worker("src code/Databases/Warehouse.db")
 a = Assister("src code/Databases/Warehouse.db")
-error = discord.Embed( title="🚨 Internal Error 🚨", description="Something went wrong! Please open a ticket to report the issue and we'll get it resolved as soon as possible.", color=discord.Colour.red())
 
 
 
-with open("token.txt","r") as t:
-    token = t.read()
 
-statuses = ["Gready atm","I am the sin of Greed","🤑💶💸💳","Dead from your Poison","Sponsored by I.M.P","I eat Money for Breakfast"]
+
+statuses = [
+    "Counting rupees 💸",
+    "I am the master of savings!",
+    "Chai pe charcha ☕️",
+    "Jugaad expert in action",
+    "Sponsored by TATA",
+    "Munching on samosas and ideas"
+]
 
 status = cycle(statuses)
 
@@ -61,7 +64,7 @@ async def load():
 async def main():
     async with bot:
         await load()
-        await bot.start(token)
+        await bot.start("token")
 
         
         
@@ -70,7 +73,7 @@ async def main():
 #------------------------------------------
 @tasks.loop(seconds=30)
 async def change_status(): 
-    await bot.change_presence(status=discord.Status.online)
+    await bot.change_presence(status=discord.Status.idle)
     await bot.change_presence(activity=discord.CustomActivity(name=next(status)))
     
 

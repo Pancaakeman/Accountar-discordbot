@@ -1,0 +1,113 @@
+{
+    "fish": [
+      {
+        "name": "Goldfish",
+        "rarity": "Common",
+        "price": 5,
+        "chance": 0.5
+      },
+      {
+        "name": "Salmon",
+        "rarity": "Common",
+        "price": 10,
+        "chance": 0.3
+      },
+      {
+        "name": "Tuna",
+        "rarity": "Uncommon",
+        "price": 20,
+        "chance": 0.1
+      },
+      {
+        "name": "Trout",
+        "rarity": "Uncommon",
+        "price": 15,
+        "chance": 0.2
+      },
+      {
+        "name": "Catfish",
+        "rarity": "Rare",
+        "price": 50,
+        "chance": 0.05
+      },
+      {
+        "name": "Swordfish",
+        "rarity": "Rare",
+        "price": 100,
+        "chance": 0.02
+      },
+      {
+        "name": "Golden Arowana",
+        "rarity": "Legendary",
+        "price": 500,
+        "chance": 0.005
+      },
+      {
+        "name": "Blue Tang",
+        "rarity": "Legendary",
+        "price": 300,
+        "chance": 0.01
+      },
+      {
+        "name": "Carp",
+        "rarity": "Common",
+        "price": 8,
+        "chance": 0.4
+      },
+      {
+        "name": "Bass",
+        "rarity": "Uncommon",
+        "price": 25,
+        "chance": 0.15
+      },
+      {
+        "name": "Mackerel",
+        "rarity": "Common",
+        "price": 12,
+        "chance": 0.25
+      },
+      {
+        "name": "Pike",
+        "rarity": "Uncommon",
+        "price": 30,
+        "chance": 0.12
+      },
+      {
+        "name": "Sturgeon",
+        "rarity": "Rare",
+        "price": 70,
+        "chance": 0.03
+      },
+      {
+        "name": "Barracuda",
+        "rarity": "Rare",
+        "price": 120,
+        "chance": 0.01
+      },
+      {
+        "name": "Marlin",
+        "rarity": "Legendary",
+        "price": 600,
+        "chance": 0.004
+      },
+      {
+        "name": "Rainbow Trout",
+        "rarity": "Uncommon",
+        "price": 18,
+        "chance": 0.18
+      },
+      {
+        "name": "Pufferfish",
+        "rarity": "Rare",
+        "price": 200,
+        "chance": 0.008
+      },
+      {
+        "name": "Seahorse",
+        "rarity": "Legendary",
+        "price": 350,
+        "chance": 0.006
+      }
+    ]
+  }
+  
