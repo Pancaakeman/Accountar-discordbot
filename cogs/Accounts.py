@@ -26,12 +26,14 @@ class Accounting(commands.Cog):
                 await self.a.id_add(userid=interaction.user.id)
                 embed= discord.Embed(title=f"A bank account has been successfully created for: {interaction.user.display_name}",colour=discord.Color.brand_green())
                 embed.add_field(name="Run `/account` to check out your account!")
+                embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/7156/7156227.png")
                 embed.set_footer(text="Welcome aboard!")
                 embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
                 await interaction.response.send_message(embed = embed)
             
             else:
                 embed = discord.Embed( title="🚫 Account Creation Limit Reached!", description="You cannot create more than one bank account. Please contact support if you need assistance.", color=discord.Colour.red() ) 
+                embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/497/497789.png")
                 embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
                 await interaction.response.send_message(embed = embed)
         except Exception as e: 
@@ -40,13 +42,15 @@ class Accounting(commands.Cog):
     @app_commands.command(name="account",description="Enables you to view your own or other people's bank accounts")
     async def view(self,interaction :discord.Interaction,user : discord.Member = None):
         try:
-            if user is None:
-                user = interaction.user.id
             
-            if await self.a.account_check(interaction,user=user.id) is None:
+            if user is None:
+                user = interaction.user
+            else:
+                user = user 
+            
+            if await self.a.account_check(interaction,user.id) is None:
                 return None
             else:
-                print(user)
                     
                 check = await self.k.display_bank(userid=user.id)
                 bank_value = check[1]
@@ -85,4 +89,3 @@ class Accounting(commands.Cog):
 
 async def setup(bot):
     await bot.add_cog(Accounting(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))
-    print(f"Economy Cog Loaded")

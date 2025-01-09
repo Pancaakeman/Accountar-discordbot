@@ -45,16 +45,28 @@ class Assister:
             
             await conn.commit()            
             
-    async def account_check(self,user):
+    async def account_check(self,interaction,user):
         async with aiosqlite.connect(self.database_file) as conn:
             async with conn.execute("SELECT * FROM money WHERE User = ?",(user,)) as c:
                 c = await c.fetchone()
                 
                 
                 if c is None:
+                    embed = discord.Embed(title="You have do not have an account",description="Run /enroll to create one!")
+                    embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
+                    embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/2748/2748614.png")
                     return None
                 else:
                     return False
+                
+    async def admin_check(self,interaction):
+        for id in list(ADMINS):
+            if interaction.user.id == id:
+                return True
+            else:
+                return False
+            
+
 #ALL OF THIS IS FOR COLLECT     
     async def daily_reset_collect(self):
         async with aiosqlite.connect(self.database_file) as conn:
@@ -94,18 +106,9 @@ class Assister:
     async def check_bal(self,user,amount):  
         async with aiosqlite.connect(self.database_file) as conn:
             async with conn.execute("SELECT * FROM money WHERE User = ?",(user,)) as c:
-                c = c.fetchone()    
-                if amount > c:
+                c = await c.fetchone()    
+                if amount > c[1]:
                     return None
                 else:
                     return not None
                 
-    async def admin_check(interaction):
-        admin_req = 0
-        for id in list(ADMINS):
-            if interaction.user.id == id:
-                admin_req = 1
-                return 1
-                
-        if admin_req  != 1:
-                return 0
