@@ -5,6 +5,7 @@ from itertools import cycle
 from Database_Managers import Assister, Worker
 import datetime
 import os
+discord.utils.setup_logging()
 
 #Variables
 
@@ -64,7 +65,7 @@ async def load():
 async def main():
     async with bot:
         await load()
-        await bot.start("token")
+        await bot.start("")
 
         
         
@@ -86,6 +87,7 @@ async def on_ready():
     await check_collect_reset()
     await bot.tree.sync()
     await print("Tree Synced")
+    isready = True
     
     
 asyncio.run(main=main())

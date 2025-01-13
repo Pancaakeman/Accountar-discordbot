@@ -14,8 +14,8 @@ class Admining(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded")
-        await self.bot.tree.sync()
-        
+        #await self.bot.tree.sync()
+        #self.isready = True
     @app_commands.command(name="add_money",description="[ADMIN ONLY] Allows you to add money to any user's account")
     async def add_money(self,interaction: discord.Interaction,user: discord.Member,addition: int):
         try:
@@ -61,6 +61,7 @@ class Admining(commands.Cog):
                 embed.add_field(name="Money:  ",value="Table Status = ✅",inline=False)
                 embed.add_field(name="Roles:   ",value="Table Status = ✅",inline=False)
                 embed.add_field(name="History: ",value="Table Status = ✅",inline=False)
+                embed.add_field(name="Licenses: ",value="Table Status = ✅",inline=False)
                 embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
                 await interaction.response.send_message(embed = embed)
         except Exception as e:
@@ -79,7 +80,7 @@ class Admining(commands.Cog):
                 if check is not True:
                     embed = discord.Embed(title="🎉Pay Role Created Successfully!",color=discord.Color.fuchsia())
                     embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/17960/17960628.png")
-                    embed.add_field(name=f"🏷️ Income Role created for: `@{role}`", value=f" 📨 Income Collectable: {income}",inline = False)
+                    embed.add_field(name=f"🏷️ Income Role created for: `@{role}`", value=f" 📨 Income Collectable: £{income}",inline = False)
                     embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url)
                     await interaction.response.send_message(embed = embed)
                     

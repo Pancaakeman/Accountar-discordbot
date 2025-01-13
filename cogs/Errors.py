@@ -15,7 +15,7 @@ class Erroring(commands.Cog):
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded")
         await self.bot.tree.sync()
-        
+        self.isready = True
     @commands.Cog.listener()
     async def on_command_error(self,error,ctx):
         if isinstance(error, commands.MissingRequiredArgument):

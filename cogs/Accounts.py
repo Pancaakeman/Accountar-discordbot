@@ -6,6 +6,7 @@ from Database_Managers.Worker import Worker
 
 
 
+
 class Accounting(commands.Cog):
     def __init__(self, bot,a,k):
         self.bot = bot
@@ -14,18 +15,19 @@ class Accounting(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded")
-        await self.bot.tree.sync()        
+        #await self.bot.tree.sync()  
+        #self.isready = True      
         
     @app_commands.command(name="enroll",description="Enables you to create an account")
-    async def enrollment(self,interaction :discord.interactions):
+    async def enrollment(self,interaction :discord.Interaction):
         try:
             check1 = await self.k.create_acc(userid=interaction.user.id)
             check2 = await self.a.enroll_salary(userid=interaction.user.id)
+            check3 = await self.a.initalize_licenses(user = interaction.user.id)
             
-            if check2 is not None and check1 is not None:
-                await self.a.id_add(userid=interaction.user.id)
+            if check1 is not None and check2 is not None and check3 is not None:
                 embed= discord.Embed(title=f"A bank account has been successfully created for: {interaction.user.display_name}",colour=discord.Color.brand_green())
-                embed.add_field(name="Run `/account` to check out your account!")
+                embed.add_field(name="Run `/account` to check out your account!",value="👏🥳🎉")
                 embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/7156/7156227.png")
                 embed.set_footer(text="Welcome aboard!")
                 embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )

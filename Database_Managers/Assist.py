@@ -7,28 +7,28 @@ class Assister:
         self.database_file = database_file
         
         
-    async def id_add(self,userid):
-        with open("./src code/userlist.txt","a") as f:
-            f.write(f"{userid}\n")
-            f.close()
+
+
         
         
     async def enroll_salary(self,userid):
         async with aiosqlite.connect(self.database_file) as conn:      
             async with conn.execute(f"SELECT * FROM history WHERE User = ?",(userid,)) as c:
                 c = await c.fetchone()
+                print(f"Enroll-C: {c}")
                 
                 if c is None:
-                    await conn.execute('INSERT INTO history(User,Last_collect) VALUES (?,?)',(userid,0))                    
-                    return not None
-                else:                 
-                    return None
-            await conn.commit()
+                    await conn.execute('INSERT INTO history VALUES (?,?)',(userid,0)) 
+                    await conn.commit()                   
+                    return True
+                else:
+                    return True
+
 
         
     async def create_table(self):
             async with aiosqlite.connect(self.database_file) as conn:
-                conn.execute("""CREATE TABLE IF NOT EXISTS money (
+                await conn.execute("""CREATE TABLE IF NOT EXISTS money (
                                         User INT PRIMARY KEY,
                                         Bank INT
                                         )""")
@@ -41,9 +41,16 @@ class Assister:
                                         User INT PRIMARY KEY,
                                         Last_collect INT
                                         )""")
+                await conn.execute("""CREATE TABLE IF NOT EXISTS licenses (
+                                        User INT PRIMARY KEY,
+                                        Fishing_License INT,
+                                        Hunting_License INT,
+                                        Business_License INT,
+                                        Marriage_License INT)""")
 
             
-            await conn.commit()            
+                await conn.commit() 
+                       
             
     async def account_check(self,interaction,user):
         async with aiosqlite.connect(self.database_file) as conn:
@@ -55,6 +62,7 @@ class Assister:
                     embed = discord.Embed(title="You have do not have an account",description="Run /enroll to create one!")
                     embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
                     embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/2748/2748614.png")
+                    await interaction.response.send_message(embed = embed)
                     return None
                 else:
                     return False
@@ -94,7 +102,7 @@ class Assister:
     async def role_check_collect(self,roles):
         async with aiosqlite.connect(self.database_file) as conn:
             async with conn.execute(f"SELECT * FROM roles WHERE Role = ?",(roles,)) as c:
-                role_check = await role_check.fetchone()
+                role_check= await c.fetchone()
 
                 
                 if role_check is not None:
@@ -111,4 +119,13 @@ class Assister:
                     return None
                 else:
                     return not None
-                
+    async def initalize_licenses(self,user):
+        async with aiosqlite.connect(self.database_file) as conn:
+            async with conn.execute ("SELECT * FROM licenses WHERE User = ?",(user,)) as c:
+                c = await c.fetchone()
+            if c is None:
+                await conn.execute("INSERT INTO licenses VALUES(?,?,?,?,?)",(user,0,0,0,0))
+                await conn.commit()
+                return not None
+            else:
+                return not None

@@ -26,5 +26,11 @@ userList = [[110,"Cashin","Bonnie","Cae110",7005],
 # -------------------------------------------------------------------
 # Main program
 # -------------------------------------------------------------------
-user_name = input("Enter your login name: ")
-password = input("Enter password: ")
+inname = str(input("Enter your login name: "))
+inpassword = int(input("Enter your 4 digit long password: "))
+
+if inpassword >= 100 or inpassword <= 9999:
+    for item in userList:
+        if item[3] == inname:
+            print("Username Verified!")
+            if item[4]
