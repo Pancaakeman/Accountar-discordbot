@@ -103,22 +103,27 @@ class Worker:
         
             async with aiosqlite.connect(self.database_file) as conn:
                 money_check =  await Assister(self.database_file).check_bal(user=user,amount=license_cost)
-                print(license_name)
                 if money_check is not None:
-                    print(f"After if: {license_name}")
                     async with conn.execute(f"SELECT * FROM licenses WHERE User = ?",(user,)) as c:
-                        c = await c.fetchone()
-                        print(f"c: {c}")
-                        e = await conn.execute(f"SELECT * FROM money WHERE User = ?",(user,))
-                        e = await e.fetchone()
-                        print(f"e: {e}")
+                        og_c = await c.fetchone()
+                        new_bal = money_check-license_cost
                         
-                        if c is None:
-                            await conn.execute('UPDATE licenses SET {} = ? WHERE User = ?'.format(license_name),(1,user))
-                            await conn.execute("UPDATE money SET Bank = ? WHERE User = ?",(e[1]-license_cost,user))
+                        await conn.execute("UPDATE licenses SET {} = 1 WHERE User = ?".format(license_name),(user,))
+                        await conn.commit()
+                        new_c = await conn.execute("SELECT * FROM licenses WHERE User = ?",(user,))
+                        new_c = await new_c.fetchone()
+                        print("new",new_c)
+                        print("old",og_c)
+                        
+                        if new_c != og_c:
+                            await conn.execute("UPDATE money SET Bank = ? WHERE User = ?",(new_bal,user))
                             await conn.commit()
-                        else:
-                            return 
+                            check = await conn.execute("SELECT * FROM licenses WHERE User = ?",(user,))
+                            check = await check.fetchone()
+                            print("check: ",check)
+                            return True 
+                        elif new_c == og_c:
+                            return  None
                 else:
                     return False
         except Exception as e:

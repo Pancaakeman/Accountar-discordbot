@@ -28,15 +28,18 @@ class Button_view(discord.ui.View):
     async def yes_button(self,interaction: discord.Interaction,Button: discord.ui.Button):
         check = await self.k.license_add(user=interaction.user.id,license_name=self.license_type,license_cost = self.license_cost)  
         if check is False:
-            embed = discord.Embed(title="😷Too Poor!",description=f"Earn More money or lower your wager",color=discord.Color.brand_red())
+            embed = discord.Embed(title="😷Too Poor!",description=f"Earn More money to purchase",color=discord.Color.brand_red())
             embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/8125/8125441.png")
             embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
             await interaction.response.send_message(embed=embed)
             
-        elif check 
+        elif check is True:
+            await interaction.response.send_message(embed = discord.Embed(title="**Purchased!**",description=f"**{self.license_cost} has been debited from your account!** ",color=discord.Colour.brand_green()))
+        elif check is None:
+            await interaction.response.send_message(embed = discord.Embed(title="**Already Owned!**",description="**You already own this License** ",color=discord.Colour.brand_green()))
     @discord.ui.button(label="Cancel",style=discord.ButtonStyle.red)
     async def no_button(self,interaction: discord.Interaction,Button: discord.ui.Button):
-        await interaction.response.send_message(embed = discord.Embed(title="Cancelled",description=" ",color=discord.Colour.brand_red()))
+        await interaction.response.send_message(embed = discord.Embed(title="**Cancelled**",description=" ",color=discord.Colour.brand_red()))
         
 class Licensing(commands.Cog):
     def __init__(self, bot,a,k):
@@ -69,7 +72,7 @@ class Licensing(commands.Cog):
                 embed.add_field(name="Description: ",value=description)
                 embed.add_field(name="Price",value=f"£{price}")
                 embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
-                embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/9835/9835724.png")
+                embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/11725/11725853.png")
                 await interaction.response.send_message(embed = embed,view=view)        
         except Exception as e:
             print(e)
