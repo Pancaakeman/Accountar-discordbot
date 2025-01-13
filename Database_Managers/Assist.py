@@ -118,7 +118,7 @@ class Assister:
                 if amount > c[1]:
                     return None
                 else:
-                    return not None
+                    return c[1]
     async def initalize_licenses(self,user):
         async with aiosqlite.connect(self.database_file) as conn:
             async with conn.execute ("SELECT * FROM licenses WHERE User = ?",(user,)) as c:

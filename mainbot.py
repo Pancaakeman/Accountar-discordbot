@@ -65,7 +65,7 @@ async def load():
 async def main():
     async with bot:
         await load()
-        await bot.start("")
+        await bot.start("MTMyNTIwMzIwNTg4NTUyNjA5OA.GHI2O5.iFqT6YA5cj1f9u2esw9tVR_moRtVBiBfspfjtw")
 
         
         
