@@ -86,7 +86,7 @@ class Accounting(commands.Cog):
                 
         except Exception as e:
             print(e)
-        
+
 
 
 async def setup(bot):

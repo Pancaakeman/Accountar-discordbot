@@ -15,7 +15,6 @@ class Worker:
             async with conn.execute(f"SELECT * FROM money WHERE User = ?",(userid,)) as c:
                 c = await c.fetchone()
                 if c is None:
-                    print(c)
                     await conn.execute('INSERT INTO money(User,Bank) VALUES (?,?)',(userid,0))
                     await conn.commit()        
                     return not None                       
@@ -111,16 +110,12 @@ class Worker:
                         await conn.execute("UPDATE licenses SET {} = 1 WHERE User = ?".format(license_name),(user,))
                         await conn.commit()
                         new_c = await conn.execute("SELECT * FROM licenses WHERE User = ?",(user,))
-                        new_c = await new_c.fetchone()
-                        print("new",new_c)
-                        print("old",og_c)
-                        
+                        new_c = await new_c.fetchone()                        
                         if new_c != og_c:
                             await conn.execute("UPDATE money SET Bank = ? WHERE User = ?",(new_bal,user))
                             await conn.commit()
                             check = await conn.execute("SELECT * FROM licenses WHERE User = ?",(user,))
                             check = await check.fetchone()
-                            print("check: ",check)
                             return True 
                         elif new_c == og_c:
                             return  None
@@ -128,5 +123,16 @@ class Worker:
                     return False
         except Exception as e:
             print(e)
+    
+    async def advanced_bank_view(self,user):
+        try:
+            async with aiosqlite.connect(self.database_file) as conn:
+                async with conn.execute(f"SELECT * FROM licenses WHERE User = ?",(user,)) as c:
+                    c = await c.fetchone()
+        
+        except Exception as e:
+            print(e)
+        
+        
 
     

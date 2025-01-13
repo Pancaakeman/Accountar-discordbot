@@ -14,9 +14,7 @@ class Assister:
     async def enroll_salary(self,userid):
         async with aiosqlite.connect(self.database_file) as conn:      
             async with conn.execute(f"SELECT * FROM history WHERE User = ?",(userid,)) as c:
-                c = await c.fetchone()
-                print(f"Enroll-C: {c}")
-                
+                c = await c.fetchone()                
                 if c is None:
                     await conn.execute('INSERT INTO history VALUES (?,?)',(userid,0)) 
                     await conn.commit()                   
