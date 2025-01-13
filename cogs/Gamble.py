@@ -15,8 +15,8 @@ class Gambling(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded")
-        await self.bot.tree.sync()
-        
+        #await self.bot.tree.sync()
+        #self.isready = True
     @app_commands.command(name="gamble",description="Gamble virtual money for a chance to double your money or lose it all")
     async def coinflip(self,interaction: discord.Interaction, wager: int):
         try:

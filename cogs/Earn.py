@@ -15,8 +15,8 @@ class Earning(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded")
-        await self.bot.tree.sync()  
-        
+        #await self.bot.tree.sync()  
+        #self.isready = True
     @app_commands.command(name="collect",description="Lets you collect a salary for each of your roles")
     async def collection(self,interaction : discord.Interaction):
         try:
@@ -38,6 +38,7 @@ class Earning(commands.Cog):
                     role_ids = [role.id for role in interaction.user.roles]
                     for role_id in role_ids:
                         role_check = await self.a.role_check_collect(roles=role_id)
+                        print("Role:",role_check)
                         
                         if role_check is not None:
                             command = await self.k.collect(role=role_id, user=interaction.user.id)
@@ -46,7 +47,7 @@ class Earning(commands.Cog):
                             income = command[1]
                             collected_any = True
                             role_embed = discord.Embed(title="Income Collected!", color=discord.Color.dark_teal())
-                            role_embed.add_field(name=f"Pay Role: {role_ping}", value=f"Income collected: **{income}**", inline=False)
+                            role_embed.add_field(name=f"Pay Role: {role_ping}", value=f"Income collected: **£{income}**", inline=False)
                             role_embed.set_footer(text="Keep up the good work!")
                             role_embed.set_author(name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url)
                             role_embed.timestamp = datetime.datetime.now()
@@ -57,7 +58,7 @@ class Earning(commands.Cog):
                         fail_embed = discord.Embed(title="You Don't have any Pay roles!!", color=discord.Color.teal())
                         fail_embed.set_footer(text="If you think this is a mistake, Contact an Admin")
                         fail_embed.set_author(name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url)
-                        await interaction.channel.send(embed=fail_embed)
+                        await interaction.response.send_message(embed=fail_embed)
                     
         except Exception as e:
             print(e)

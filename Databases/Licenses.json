@@ -1,26 +1,26 @@
 {
   "licenses": [  
     {
-      "name": "Fishing License",
-      "value":"Fishing License",
+      "name": "Fishing_License",
+      "value":"Can_fish",
       "price": 50,
       "description": "Allows the holder to fish in designated areas."
     },
     {
-      "name": "Hunting License",
-      "value":"Hunting License",
+      "name": "Hunting_License",
+      "value":"Can_hunt",
       "price": 100,
       "description": "Grants permission to hunt in approved zones."
     },
     {
-      "name": "Business License",
-      "value":"Business License",
+      "name": "Business_License",
+      "value":"Can_own_org",
       "price": 1000,
       "description": "Required to legally operate a business."
     },
     {
-      "name": "Marriage License",
-      "value":"Marriage License",
+      "name": "Marriage_License",
+      "value":"Can_marry",
       "price": 60,
       "description": "Legal document required for marriage."
     }
