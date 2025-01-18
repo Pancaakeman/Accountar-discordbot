@@ -24,7 +24,7 @@ class Button_view(discord.ui.View):
         self.license_type = license_type
         self.license_cost = license_cost
         self.k = k        
-    @discord.ui.button(label="Confirm Purchase?",style=discord.ButtonStyle.primary)
+    @discord.ui.button(label="Confirm Purchase?",style=discord.ButtonStyle.green)
     async def yes_button(self,interaction: discord.Interaction,Button: discord.ui.Button):
         check = await self.k.license_add(user=interaction.user.id,license_name=self.license_type,license_cost = self.license_cost)  
         if check is False:
@@ -58,9 +58,7 @@ class Licensing(commands.Cog):
     async def acquire_license(self,interaction: discord.Interaction,license_type: str):
         try:
             acc_check = await self.a.account_check(interaction=interaction,user=interaction.user.id)
-            if acc_check is not None:
-                print(license_type)
-                
+            if acc_check is not None:                
                 specific_license = get_license_by_value(license_type) 
                 if specific_license: 
                     price =  specific_license['price']

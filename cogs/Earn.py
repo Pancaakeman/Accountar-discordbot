@@ -4,6 +4,7 @@ from discord.ext import commands
 from Database_Managers.Assist import Assister
 from Database_Managers.Worker import Worker
 import datetime
+import random
 
 
 
@@ -62,9 +63,29 @@ class Earning(commands.Cog):
                     
         except Exception as e:
             print(e)
-        
-        
-        
+    @app_commands.command(name="daily",description="Claims you daily reward! ")
+    async def daily_reward(self,interaction: discord.Interaction):
+        acc_check = await self.a.account_check(interaction=interaction, user=interaction.user.id)
+        current = datetime.datetime.now()
+        reset_time = datetime.datetime(year=current.year, month=current.month, day=current.day, hour=0, minute=0, second=0)
+        if acc_check is not None:
+            check = await self.a.check_daily_history(userid = interaction.user.id)
+            if check is True:
+
+                embed = discord.Embed(title="Already Collected!",description=f"Try again later! in ```{reset_time}```",color=discord.Colour.brand_red())
+                embed.set_footer(text="If you think this is a mistake, Contact an Admin!")
+                embed.set_author(name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url)
+                await interaction.response.send_message(embed=embed)
+            elif check is False:
+                amount = random.randint(40,200)
+                await self.k.add_money(user = interaction.user.id,add = amount)
+                await self.a.switch_daily(userid = interaction.user.id)
+                embed = discord.Embed(title="Collected!",description=f"You can collect again in ```{reset_time}```",color=discord.Colour.gold())
+                embed.add_field(name="Amount Collected:",value = f"£{amount}")
+                embed.set_footer(text="Spend it wisely!")
+                embed.set_author(name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url)
+                await interaction.response.send_message(embed=embed)
+                
 async def setup(bot):
     await bot.add_cog(Earning(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))    
         

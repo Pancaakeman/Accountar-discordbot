@@ -7,6 +7,7 @@ from Database_Managers.Worker import Worker
 
 
 
+
 class Accounting(commands.Cog):
     def __init__(self, bot,a,k):
         self.bot = bot
@@ -83,10 +84,11 @@ class Accounting(commands.Cog):
                 )
                 
                 await interaction.response.send_message(embed=embed)
-                
         except Exception as e:
             print(e)
-        
+                
+                
+
 
 
 async def setup(bot):

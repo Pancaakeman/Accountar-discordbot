@@ -14,11 +14,9 @@ class Assister:
     async def enroll_salary(self,userid):
         async with aiosqlite.connect(self.database_file) as conn:      
             async with conn.execute(f"SELECT * FROM history WHERE User = ?",(userid,)) as c:
-                c = await c.fetchone()
-                print(f"Enroll-C: {c}")
-                
+                c = await c.fetchone()                
                 if c is None:
-                    await conn.execute('INSERT INTO history VALUES (?,?)',(userid,0)) 
+                    await conn.execute('INSERT INTO history VALUES (?,?,?)',(userid,0,0)) 
                     await conn.commit()                   
                     return True
                 else:
@@ -39,7 +37,8 @@ class Assister:
                 
                 await conn.execute("""CREATE TABLE IF NOT EXISTS history (
                                         User INT PRIMARY KEY,
-                                        Last_collect INT
+                                        Last_collect INT,
+                                        Last_daily INT
                                         )""")
                 await conn.execute("""CREATE TABLE IF NOT EXISTS licenses (
                                         User INT PRIMARY KEY,
@@ -83,7 +82,7 @@ class Assister:
                 for row in rows:
                     user_id = row[0]
                     await conn.execute('UPDATE history SET Last_collect = ? WHERE User = ?',(0,user_id))
-                
+                    await conn.execute('UPDATE history SET Last_daily = ? WHERE User = ?',(0,user_id))
             await conn.commit()
                 
 
@@ -129,3 +128,18 @@ class Assister:
                 return not None
             else:
                 return not None
+    async def check_daily_history(self,userid):
+        async with aiosqlite.connect(self.database_file) as conn:
+            async with conn.execute("SELECT * FROM history WHERE User = ?",(userid,)) as c:
+                row = await c.fetchone()
+                if row[2] == 0:
+                    
+                    return False
+                else:
+                    
+                    return True
+    async def switch_daily(self,userid):
+        async with aiosqlite.connect(self.database_file) as conn:
+            await conn.execute("UPDATE history SET Last_daily = ? WHERE User = ?",(1,userid)) 
+            await conn.commit()
+        
