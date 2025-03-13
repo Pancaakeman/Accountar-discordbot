@@ -14,21 +14,15 @@ class Erroring(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded")
-        await self.bot.tree.sync()
+        #await self.bot.tree.sync()
         self.isready = True
-    @commands.Cog.listener()
-    async def on_command_error(self,error,ctx):
-        if isinstance(error, commands.MissingRequiredArgument):
-            embed = discord.Embed(title="Error:",description="You seemed to have missed one or more required argument/s",color=discord.Color.dark_red())
-            embed.add_field(name="Recheck your command",value="If the error persists contact an Admin",inline=True)
-            embed.set_author(name=f"{ctx.author.name}", icon_url=ctx.author.avatar.url )    
-            await ctx.send(embed)
     
-        elif isinstance(error, commands.MemberNotFound):
-            embed = discord.Embed(title="Error:",description="Bot couldn't find",color=discord.Color.dark_red())
+    async def on_error(interaction: discord.Interaction, error: app_commands.AppCommandError):    
+        if isinstance(error, app_commands.MemberNotFound):
+            embed = discord.Embed(title="Error:",description="Bot couldn't find Member",color=discord.Color.dark_red())
             embed.add_field(name="Recheck the User",value="If the error persists contact an Admin",inline=True)
-            embed.set_author(name=f"{ctx.author.name}", icon_url=ctx.author.avatar.url )    
-            await ctx.send(embed)
-        
+            embed.set_author(name=f"{interaction.user.global_name}", icon_url=interaction.user.avatar.url )    
+            await interaction.response.send_message(embed)
+               
 async def setup(bot):
     await bot.add_cog(Erroring(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))

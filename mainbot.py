@@ -22,12 +22,11 @@ a = Assister("src code/Databases/Warehouse.db")
 
 
 statuses = [
-    "Counting rupees 💸",
+    "Counting💸",
     "I am the master of savings!",
-    "Chai pe charcha ☕️",
-    "Jugaad expert in action",
-    "Sponsored by TATA",
-    "Munching on samosas and ideas"
+    "No Money?",
+    "Man, I love Money",
+    "Sponsored by [Insert Company]"
 ]
 
 status = cycle(statuses)
@@ -44,10 +43,10 @@ bot = commands.Bot(command_prefix="!",intents=intents)
 async def check_collect_reset():
     while True:
         current = datetime.datetime.now()
-        reset_time = datetime.datetime(year=current.year, month=current.month, day=current.day, hour=0, minute=0, second=0)
+        reset_time = datetime.datetime(year=current.year, month=current.month, day=current.day,microsecond=current.microsecond, hour=0, minute=0, second=0)
         
         if current >= reset_time:
-            reset_time = reset_time + datetime.timedelta(days=1)
+            reset_time = reset_time + datetime.timedelta(days=1) 
         
         time_until_reset = (reset_time - current).total_seconds()
         print(f"Time until reset: {time_until_reset} seconds")
@@ -65,7 +64,7 @@ async def load():
 async def main():
     async with bot:
         await load()
-        await bot.start("MTMyNTIwMzIwNTg4NTUyNjA5OA.GHI2O5.iFqT6YA5cj1f9u2esw9tVR_moRtVBiBfspfjtw")
+        await bot.start("")
 
         
         
