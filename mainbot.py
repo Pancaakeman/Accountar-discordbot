@@ -5,10 +5,12 @@ from itertools import cycle
 from Database_Managers import Assister, Worker
 import datetime
 import os
+import dotenv
 discord.utils.setup_logging()
 
 #Variables
-
+env = dotenv.load_dotenv()
+token = os.environ.get("TOKEN")
 
 RESET_TIME = datetime.time(hour=0,minute=0,second=0)
 
@@ -64,7 +66,8 @@ async def load():
 async def main():
     async with bot:
         await load()
-        await bot.start("")
+        await a.daily_reset_collect()
+        await bot.start(token=token)
 
         
         
