@@ -2,11 +2,25 @@ import aiosqlite
 import discord
 ADMINS = [732513701147574322,959729939370868766]
 
+async def binary_search(pitem,plist):
+    left = 0
+    right = len(plist) - 1
+    while left <= right:
+
+        mid = left + right//2
+        if plist[mid] < pitem:
+            left = mid + 1
+        elif plist[mid] > pitem:
+            right = mid - 1
+        else:
+            return mid
+        
+        return False
+
 
 class Assister:
     def __init__(self,database_file):
         self.database_file = database_file
-        
         
 
 
@@ -68,12 +82,8 @@ class Assister:
                     return False
                 
     async def admin_check(self,interaction):
-        for id in list(ADMINS):
-            if interaction.user.id == id:
-                return True
-            else:
-                return False
-            
+        search = binary_search(pitem=interaction.id,plist=ADMINS)
+        return search
 
 #ALL OF THIS IS FOR COLLECT     
     async def daily_reset_collect(self):
@@ -143,4 +153,10 @@ class Assister:
         async with aiosqlite.connect(self.database_file) as conn:
             await conn.execute("UPDATE history SET Last_daily = ? WHERE User = ?",(1,userid)) 
             await conn.commit()
+    
+    async def role_salary_check(self,pItem):
+        async with aiosqlite.connect(self.database_file) as conn:
+            async with conn.execute("SELECT * from roles") as c:
+                roles = await c.fetchall()
+                await binary_search(plist= roles,pitem= pItem)
         
