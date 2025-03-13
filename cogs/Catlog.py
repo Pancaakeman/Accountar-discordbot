@@ -32,10 +32,10 @@ class Catlogging(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded")
-        await self.bot.tree.sync()  
+        #await self.bot.tree.sync()  
         #self.isready = True 
-    @app_commands.command(name="license_catalogue",description="Shows you a catalogue with every single license")
-    async def license_catlog(self,interaction: discord.Interaction):
+    #@app_commands.command(name="license_catalogue",description="Shows you a catalogue with every single license")
+    '''async def license_catlog(self,interaction: discord.Interaction):
         try:
             #acc_check = await self.a.account_check(interaction=interaction,user=interaction.user.id)
             #if acc_check is not None:      
@@ -48,7 +48,7 @@ class Catlogging(commands.Cog):
                 
         except Exception as e:
             print(e)
-
+'''
         
     
            

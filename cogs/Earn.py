@@ -39,9 +39,10 @@ class Earning(commands.Cog):
                     role_ids = [role.id for role in interaction.user.roles]
                     for role_id in role_ids:
                         role_check = await self.a.role_check_collect(roles=role_id)
-                        print("Role:",role_check)
+                        
                         
                         if role_check is not None:
+                            await interaction.response.send_message("Collecting Income!")
                             command = await self.k.collect(role=role_id, user=interaction.user.id)
                             role = command[0]
                             role_ping = interaction.guild.get_role(role)
@@ -63,11 +64,12 @@ class Earning(commands.Cog):
                     
         except Exception as e:
             print(e)
-    @app_commands.command(name="daily",description="Claims you daily reward! ")
+    @app_commands.command(name="daily",description="Claim you daily reward! ")
     async def daily_reward(self,interaction: discord.Interaction):
         acc_check = await self.a.account_check(interaction=interaction, user=interaction.user.id)
         current = datetime.datetime.now()
-        reset_time = datetime.datetime(year=current.year, month=current.month, day=current.day, hour=0, minute=0, second=0)
+        reset_time = datetime.datetime(year=current.year, month=current.month, day=current.day,microsecond=current.microsecond, hour=0, minute=0, second=0) - current
+        reset_time += datetime.timedelta(days=1)
         if acc_check is not None:
             check = await self.a.check_daily_history(userid = interaction.user.id)
             if check is True:

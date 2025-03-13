@@ -19,30 +19,38 @@ class Gambling(commands.Cog):
         #self.isready = True
     @app_commands.command(name="gamble",description="Gamble virtual money for a chance to double your money or lose it all")
     async def coinflip(self,interaction: discord.Interaction, wager: int):
-        try:
+        try:    
             acc_check = await self.a.account_check(interaction=interaction,user=interaction.user.id)
             if acc_check is not None:
-                mon_check = await self.a.check_bal(user= interaction.user.id,amount= wager)
-                if mon_check is not None:
-                    flip = random.randint(0,1)
-                    if flip == 0:
-                        await self.k.coinflip_lose(user= interaction.user.id,amount=wager)
-                        embed = discord.Embed(title="❌ You Lost!",description=f"Money lost: £{wager}",color=discord.Color.brand_red())
-                        embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/6448/6448481.png")
-                        embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
-                        await interaction.response.send_message(embed=embed)
-                    else:
-                        await self.k.coinflip_win(user=interaction.user.id,amount=wager * 2)
-                        embed = discord.Embed(title="🥇 You Won!",description=f"Money won: £{wager * 2}",color=discord.Color.blue())
-                        embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/12841/12841754.png")
-                        embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
-                        await interaction.response.send_message(embed=embed)
-                else:
-                    embed = discord.Embed(title="😷Too Poor!",description=f"Earn More money or lower your wager",color=discord.Color.brand_red())
-                    embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/8125/8125441.png")
+                
+                if wager < 0:
+                    embed = discord.Embed(title="You Cannot Gamble Negetive Money!",description="Debt isn't Gamblable, Don't Gamble if you are in debt!",color=discord.Color.red())
+                    embed.add_field(name="Good Thing Daisy was Watching out!",value="")
+                    embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/9200/9200700.png")
                     embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
                     await interaction.response.send_message(embed=embed)
-    
+                else:
+                    mon_check = await self.a.check_bal(user= interaction.user.id,amount= wager)
+                    if mon_check is not None:
+                        flip = random.randint(0,1)
+                        if flip == 0:
+                            await self.k.coinflip_lose(user= interaction.user.id,amount=wager)
+                            embed = discord.Embed(title="❌ You Lost!",description=f"Money lost: £{wager}",color=discord.Color.brand_red())
+                            embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/6448/6448481.png")
+                            embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
+                            await interaction.response.send_message(embed=embed)
+                        else:
+                            await self.k.coinflip_win(user=interaction.user.id,amount=wager * 2)
+                            embed = discord.Embed(title="🥇 You Won!",description=f"Money won: £{wager * 2}",color=discord.Color.blue())
+                            embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/12841/12841754.png")
+                            embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
+                            await interaction.response.send_message(embed=embed)
+            else:
+                embed = discord.Embed(title="😷Too Poor!",description=f"Earn More money or lower your wager",color=discord.Color.brand_red())
+                embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/8125/8125441.png")
+                embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
+                await interaction.response.send_message(embed=embed)
+        
 
         except Exception as e:
             print(e)

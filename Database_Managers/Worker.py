@@ -121,6 +121,7 @@ class Worker:
                             return  None
                 else:
                     return False
+            await conn.close()
         except Exception as e:
             print(e)
     

@@ -2,6 +2,7 @@ import aiosqlite
 import discord
 ADMINS = [732513701147574322,959729939370868766]
 
+
 class Assister:
     def __init__(self,database_file):
         self.database_file = database_file
@@ -136,8 +137,8 @@ class Assister:
                     
                     return False
                 else:
-                    
                     return True
+                
     async def switch_daily(self,userid):
         async with aiosqlite.connect(self.database_file) as conn:
             await conn.execute("UPDATE history SET Last_daily = ? WHERE User = ?",(1,userid)) 
