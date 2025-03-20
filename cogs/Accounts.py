@@ -8,7 +8,7 @@ from Database_Managers.Worker import Worker
 
 
 
-class Accounting(commands.Cog):
+class Accounts(commands.Cog):
     def __init__(self, bot,a,k):
         self.bot = bot
         self.a = a
@@ -92,4 +92,4 @@ class Accounting(commands.Cog):
 
 
 async def setup(bot):
-    await bot.add_cog(Accounting(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))
+    await bot.add_cog(Accounts(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))

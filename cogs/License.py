@@ -41,7 +41,7 @@ class Button_view(discord.ui.View):
     async def no_button(self,interaction: discord.Interaction,Button: discord.ui.Button):
         await interaction.response.send_message(embed = discord.Embed(title="**Cancelled**",description=" ",color=discord.Colour.brand_red()))
         
-class Licensing(commands.Cog):
+class License(commands.Cog):
     def __init__(self, bot,a,k):
         self.bot = bot
         self.a = a
@@ -77,5 +77,5 @@ class Licensing(commands.Cog):
 
         
 async def setup(bot):
-    await bot.add_cog(Licensing(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))    
+    await bot.add_cog(License(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))    
         
