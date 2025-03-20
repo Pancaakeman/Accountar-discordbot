@@ -9,7 +9,7 @@ import aiosqlite
 
 
 
-class Earning(commands.Cog):
+class Earn(commands.Cog):
     def __init__(self, bot,a,k):
         self.bot = bot
         self.a = a
@@ -17,8 +17,7 @@ class Earning(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded")
-        #await self.bot.tree.sync()  
-        #self.isready = True
+
     @app_commands.command(name="collect",description="Lets you collect a salary for each of your roles")
     async def collection(self,interaction : discord.Interaction):
         try:
@@ -40,7 +39,6 @@ class Earning(commands.Cog):
                     role_ids = [role.id for role in interaction.user.roles]
                     for role_id in role_ids:
                         role_check = await self.a.role_check_collect(roles=role_id)
-                        
                         
                         if role_check is not None:
                             await interaction.response.send_message("Collecting Income!")
@@ -90,5 +88,5 @@ class Earning(commands.Cog):
                 await interaction.response.send_message(embed=embed)
                 
 async def setup(bot):
-    await bot.add_cog(Earning(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))    
-        
+    await bot.add_cog(Earn(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))    
+    

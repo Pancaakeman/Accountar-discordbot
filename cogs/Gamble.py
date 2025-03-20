@@ -7,7 +7,7 @@ import random
 
 
 
-class Gambling(commands.Cog):
+class Gamble(commands.Cog):
     def __init__(self, bot,a,k):
         self.bot = bot
         self.a = a
@@ -54,7 +54,9 @@ class Gambling(commands.Cog):
 
         except Exception as e:
             print(e)
+    
+    async def
             
 async def setup(bot):
-    await bot.add_cog(Gambling(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))    
+    await bot.add_cog(Gamble(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))    
         

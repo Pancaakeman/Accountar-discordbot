@@ -16,8 +16,8 @@ RESET_TIME = datetime.time(hour=0,minute=0,second=0)
 
 
 
-k = Worker("src code/Databases/Warehouse.db")
-a = Assister("src code/Databases/Warehouse.db")
+k = Worker("Databases/Warehouse.db")
+a = Assister("Databases/Warehouse.db")
 
 
 
@@ -63,11 +63,13 @@ async def load():
         if filename.endswith('.py'): 
             await bot.load_extension(f'cogs.{filename[:-3]}')
             
+            
 async def main():
     async with bot:
-        await load()
         await a.daily_reset_collect()
+        await load()
         await bot.start(token=token)
+
 
         
         
@@ -81,16 +83,20 @@ async def change_status():
     
 
 
-    
+async def setup_hook():
+    await bot.tree.sync()
+    print("Synced")
 
 @bot.event 
 async def on_ready(): 
     change_status.start()
     await check_collect_reset()
-    await bot.tree.sync()
+    #await bot.tree.sync()
     await print("Tree Synced")
     isready = True
-    
+
+
+
     
 asyncio.run(main=main())
 

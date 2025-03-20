@@ -6,7 +6,7 @@ from Database_Managers.Worker import Worker
 
 
 
-class Erroring(commands.Cog):
+class Errors(commands.Cog):
     def __init__(self, bot,a,k):
         self.bot = bot
         self.a = a
@@ -25,4 +25,4 @@ class Erroring(commands.Cog):
             await interaction.response.send_message(embed)
                
 async def setup(bot):
-    await bot.add_cog(Erroring(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))
+    await bot.add_cog(Errors(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))

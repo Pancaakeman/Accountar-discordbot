@@ -6,7 +6,7 @@ from Database_Managers.Worker import Worker
 
 
 
-class Admining(commands.Cog):
+class Admin(commands.Cog):
     def __init__(self, bot,a,k):
         self.bot = bot
         self.a = a
@@ -96,5 +96,5 @@ class Admining(commands.Cog):
         
         
 async def setup(bot):
-    await bot.add_cog(Admining(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))    
+    await bot.add_cog(Admin(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))    
     

@@ -24,7 +24,7 @@ class License_Catalog_view(discord.ui.View):
     async def license_select(self,interaction: discord.Interaction, Select: discord.ui.Select):
         return Select.values
 
-class Catlogging(commands.Cog):
+class Catlog(commands.Cog):
     def __init__(self, bot,a,k):
         self.bot = bot
         self.a = a
@@ -53,5 +53,5 @@ class Catlogging(commands.Cog):
     
            
 async def setup(bot):
-    await bot.add_cog(Catlogging(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))
+    await bot.add_cog(Catlog(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))
     
