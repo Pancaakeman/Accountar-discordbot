@@ -60,7 +60,7 @@ class Worker:
         
     async def add_money(self,user,add):
         async with aiosqlite.connect(self.database_file) as conn:
-            async with conn.execute(f"SELECT * FROM money WHERE User = ?",(user,)) as c:
+            async with conn.execute("SELECT * FROM money WHERE User = ?",(user,)) as c:
                 c = await c.fetchone()
                 if c is not None:
                     balance = c[1]
@@ -72,7 +72,7 @@ class Worker:
             
     async def remove_money(self,user,subtract):
         async with aiosqlite.connect(self.database_file) as conn:
-            async with conn.execute(f"SELECT * FROM money WHERE User = ?",(user,)) as c:
+            async with conn.execute("SELECT * FROM money WHERE User = ?",(user,)) as c:
                 c = await c.fetchone()
                 if c is not None:
                     balance = c[1]

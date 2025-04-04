@@ -67,7 +67,6 @@ async def main():
     async with bot:
         await a.daily_reset_collect()
         print("Tree Synced")
-        isready = True
         await load()
         await bot.start(token=token)
 
