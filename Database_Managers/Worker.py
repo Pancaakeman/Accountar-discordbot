@@ -77,15 +77,17 @@ class Worker:
                 if c is not None:
                     balance = c[1]
                     new_balance = balance - subtract
+                    print(new_balance)
                     if new_balance < 0:
                         new_balance = 0
-                        await conn.execute('UPDATE money SET Bank = ? WHERE User = ?',(new_balance,user))
+                        await conn.execute("UPDATE money SET Bank = ? WHERE User = ?",(new_balance,user,))
+                        await conn.commit()
             await conn.commit()
               
             
     async def coinflip_win(self,user,amount):
         async with aiosqlite.connect(self.database_file) as conn:
-            async with conn.execute(f"SELECT * FROM money WHERE User = ?",(user,)) as c:
+            async with conn.execute("SELECT * FROM money WHERE User = ?",(user,)) as c:
                 c = await c.fetchone()
                 new_balance = c[1] + amount
                 await conn.execute('UPDATE money SET Bank = ? WHERE User = ?',(new_balance,user))
