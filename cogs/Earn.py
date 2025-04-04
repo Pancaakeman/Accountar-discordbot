@@ -1,3 +1,4 @@
+from shutil import ExecError
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -5,7 +6,7 @@ from Database_Managers.Assist import Assister
 from Database_Managers.Worker import Worker
 import datetime
 import random
-import aiosqlite
+
 
 
 
@@ -86,7 +87,23 @@ class Earn(commands.Cog):
                 embed.set_footer(text="Spend it wisely!")
                 embed.set_author(name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url)
                 await interaction.response.send_message(embed=embed)
-                
+
+    @app_commands.command(name="work",description="Work a Job to earn some money!")
+    @app_commands.checks.cooldown(1, 300)
+    async def work(self, interaction: discord.Interaction):
+        acc_check = await self.a.account_check(interaction=interaction, user=interaction.user.id)
+        try:
+            if acc_check is not None:
+                amount = random.randint(10, 60)
+                await self.k.add_money(interaction.user.id,amount)
+                embed = discord.Embed(title="A Fair minutes pay for a Fair Minutes work",description=f"You worked hard and earned: £{amount}")
+                embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/7626/7626204.png")
+                embed.set_footer(text="Spend it wisely!")
+                embed.set_author(name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url)
+
+                await interaction.response.send_message(embed=embed)
+        except Exception as e:
+            print(e)
 async def setup(bot):
     await bot.add_cog(Earn(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))    
     

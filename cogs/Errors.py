@@ -17,9 +17,10 @@ class Errors(commands.Cog):
         #await self.bot.tree.sync()
         self.isready = True
     
-    async def on_error(interaction: discord.Interaction, error: app_commands.AppCommandError):    
-        if isinstance(error, app_commands.MemberNotFound):
-            embed = discord.Embed(title="Error:",description="Bot couldn't find Member",color=discord.Color.dark_red())
+    async def on_error(interaction: discord.Interaction, error: app_commands.AppCommandError):
+        print("error")    
+        if isinstance(error, app_commands.errors.CommandOnCooldown):
+            embed = discord.Embed(title="You are on cooldown!", description=f"{app_commands.errors.CommandOnCooldown}")
             embed.add_field(name="Recheck the User",value="If the error persists contact an Admin",inline=True)
             embed.set_author(name=f"{interaction.user.global_name}", icon_url=interaction.user.avatar.url )    
             await interaction.response.send_message(embed)

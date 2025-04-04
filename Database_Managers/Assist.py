@@ -102,7 +102,7 @@ class Assister:
                     return True
     async def role_check_collect(self,roles):
         async with aiosqlite.connect(self.database_file) as conn:
-            async with conn.execute(f"SELECT * FROM roles WHERE Role = ?",(roles,)) as c:
+            async with conn.execute("SELECT * FROM roles WHERE Role = ?",(roles,)) as c:
                 role_check= await c.fetchone()
 
                 
