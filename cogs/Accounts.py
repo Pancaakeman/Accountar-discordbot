@@ -19,11 +19,11 @@ class Accounts(commands.Cog):
         #await self.bot.tree.sync()  
         #self.isready = True      
         
-    @app_commands.command(name="enroll",description="Enables you to create an account")
-    async def enrollment(self,interaction :discord.Interaction):
+    @app_commands.command(name="create_account",description="Enables you to create an account")
+    async def create_accountment(self,interaction :discord.Interaction):
         try:
             check1 = await self.k.create_acc(userid=interaction.user.id)
-            check2 = await self.a.enroll_salary(userid=interaction.user.id)
+            check2 = await self.a.create_account_salary(userid=interaction.user.id)
             check3 = await self.a.initalize_licenses(user = interaction.user.id)
             
             if check1 is not None and check2 is not None and check3 is not None:

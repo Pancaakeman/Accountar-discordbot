@@ -15,7 +15,6 @@ token = os.environ.get("TOKEN")
 RESET_TIME = datetime.time(hour=0,minute=0,second=0)
 
 
-
 k = Worker("Databases/Warehouse.db")
 a = Assister("Databases/Warehouse.db")
 
@@ -36,7 +35,7 @@ status = cycle(statuses)
 intents = discord.Intents.all()
 intents.members = True
 bot = commands.Bot(command_prefix="!",intents=intents)
-
+bot.owner_id = 732513701147574322
   
     
 #------------------------------------------
@@ -67,6 +66,8 @@ async def load():
 async def main():
     async with bot:
         await a.daily_reset_collect()
+        print("Tree Synced")
+        isready = True
         await load()
         await bot.start(token=token)
 
@@ -87,13 +88,11 @@ async def setup_hook():
     await bot.tree.sync()
     print("Synced")
 
-@bot.event 
+
+
 async def on_ready(): 
-    change_status.start()
+    await change_status.start()
     await check_collect_reset()
-    #await bot.tree.sync()
-    await print("Tree Synced")
-    isready = True
 
 
 

@@ -55,7 +55,6 @@ class Gamble(commands.Cog):
         except Exception as e:
             print(e)
     
-    async def
             
 async def setup(bot):
     await bot.add_cog(Gamble(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))    
