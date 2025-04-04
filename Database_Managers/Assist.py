@@ -1,6 +1,5 @@
 import aiosqlite
 import discord
-ADMINS = [732513701147574322,959729939370868766]
 
 async def binary_search(pitem,plist):
     left = 0
@@ -17,16 +16,11 @@ async def binary_search(pitem,plist):
         
         return False
 
-
 class Assister:
     def __init__(self,database_file):
         self.database_file = database_file
-        
 
-
-        
-        
-    async def enroll_salary(self,userid):
+    async def create_account_salary(self,userid):
         async with aiosqlite.connect(self.database_file) as conn:      
             async with conn.execute(f"SELECT * FROM history WHERE User = ?",(userid,)) as c:
                 c = await c.fetchone()                
@@ -73,7 +67,8 @@ class Assister:
                 
                 
                 if c is None:
-                    embed = discord.Embed(title="You have do not have an account",description="Run /enroll to create one!")
+                    embed = discord.Embed(title="User does not have an account",description="Please create an account using `/create_account`",color=discord.Color.red())
+                    embed.set_footer(text="If you think this is a mistake, Contact an Admin")
                     embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
                     embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/2748/2748614.png")
                     await interaction.response.send_message(embed = embed)
@@ -81,10 +76,6 @@ class Assister:
                 else:
                     return False
                 
-    async def admin_check(self,interaction):
-        search = binary_search(pitem=interaction.id,plist=ADMINS)
-        return search
-
 #ALL OF THIS IS FOR COLLECT     
     async def daily_reset_collect(self):
         async with aiosqlite.connect(self.database_file) as conn:

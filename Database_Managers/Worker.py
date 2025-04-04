@@ -1,3 +1,4 @@
+from hmac import new
 import aiosqlite
 from Database_Managers import Assist,Assister
 
@@ -76,7 +77,9 @@ class Worker:
                 if c is not None:
                     balance = c[1]
                     new_balance = balance - subtract
-                    await conn.execute('UPDATE money SET Bank = ? WHERE User = ?',(new_balance,user))
+                    if new_balance < 0:
+                        new_balance = 0
+                        await conn.execute('UPDATE money SET Bank = ? WHERE User = ?',(new_balance,user))
             await conn.commit()
               
             
@@ -133,6 +136,11 @@ class Worker:
         
         except Exception as e:
             print(e)
+
+    async def remove_salary_role(self,role):
+        async with aiosqlite.connect(self.database_file) as conn:
+            await conn.execute("DELETE FROM roles WHERE Role = ?",(role,))
+            await conn.commit()
         
         
 
