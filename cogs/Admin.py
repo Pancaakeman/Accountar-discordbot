@@ -60,7 +60,7 @@ class Admin(commands.Cog):
                 embed = discord.Embed(title="Table Created!!",description="Bot should work flawlessly now",color=discord.Color.green())
                 embed.add_field(name="Money:    ",value="Table Status = ✅",inline=False)
                 embed.add_field(name="Roles:    ",value="Table Status = ✅",inline=False)
-                embed.add_field(name="History:  ",value="Table Status = ✅",inline=False)
+                embed.add_field(name="Licenses: ",value="Table Status = ✅",inline=False)
                 embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
                 await interaction.response.send_message(embed = embed)
         except Exception as e:

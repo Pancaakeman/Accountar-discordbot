@@ -12,8 +12,6 @@ discord.utils.setup_logging()
 env = dotenv.load_dotenv()
 token = os.environ.get("TOKEN")
 
-RESET_TIME = datetime.time(hour=0,minute=0,second=0)
-
 
 k = Worker("Databases/Warehouse.db")
 a = Assister("Databases/Warehouse.db")
