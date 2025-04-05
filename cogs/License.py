@@ -19,28 +19,36 @@ def get_license_by_value(license_value):
 
 
 class Button_view(discord.ui.View):
-    def __init__(self,license_type,license_cost,k):
+    def __init__(self,license_type,license_cost,k,allowed_user):
         super().__init__(timeout=60)
         self.license_type = license_type
         self.license_cost = license_cost
         self.k = k        
+        self.allowed_user = allowed_user
     @discord.ui.button(label="Confirm Purchase?",style=discord.ButtonStyle.green)
     async def yes_button(self,interaction: discord.Interaction,Button: discord.ui.Button):
         check = await self.k.license_add(user=interaction.user.id,license_name=self.license_type,license_cost = self.license_cost)  
-        if check is False:
-            embed = discord.Embed(title="😷Too Poor!",description=f"Earn More money to purchase",color=discord.Color.brand_red())
-            embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/8125/8125441.png")
-            embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
-            await interaction.response.send_message(embed=embed)
-            
-        elif check is True:
-            await interaction.response.send_message(embed = discord.Embed(title="**Purchased!**",description=f"**{self.license_cost} has been debited from your account!** ",color=discord.Colour.brand_green()))
-        elif check is None:
-            await interaction.response.send_message(embed = discord.Embed(title="**Already Owned!**",description="**You already own this License** ",color=discord.Colour.brand_green()))
+        
+        if interaction.user == self.allowed_user:
+            if check is False:
+                embed = discord.Embed(title="😷Too Poor!",description="Earn More money to purchase",color=discord.Color.brand_red())
+                embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/8125/8125441.png")
+                embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
+                await interaction.response.send_message(embed=embed)
+                
+            elif check is True:
+                await interaction.response.send_message(embed = discord.Embed(title="**Purchased!**",description=f"**{self.license_cost} has been debited from your account!** ",color=discord.Colour.brand_green()))
+            elif check is None:
+                await interaction.response.send_message(embed = discord.Embed(title="**Already Owned!**",description="**You already own this License** ",color=discord.Colour.brand_green()))
+   
+        else:
+            await interaction.response.send_message(content="You are not allowed to access this button!", ephemeral=True)
     @discord.ui.button(label="Cancel",style=discord.ButtonStyle.red)
     async def no_button(self,interaction: discord.Interaction,Button: discord.ui.Button):
-        await interaction.response.send_message(embed = discord.Embed(title="**Cancelled**",description=" ",color=discord.Colour.brand_red()))
-        
+        if interaction.user == self.allowed_user:
+            await interaction.response.send_message(embed = discord.Embed(title="**Cancelled**",description=" ",color=discord.Colour.brand_red()))
+        else:
+            await interaction.response.send_message(content="You are not allowed to access this button!", ephemeral=True)
 class License(commands.Cog):
     def __init__(self, bot,a,k):
         self.bot = bot
@@ -63,10 +71,10 @@ class License(commands.Cog):
                 if specific_license: 
                     price =  specific_license['price']
                     description = specific_license['description'] 
-                view = Button_view(license_type=license_type,k= Worker("Databases/Warehouse.db"),license_cost=price)
+                view = Button_view(license_type=license_type,k= Worker("Databases/Warehouse.db"),license_cost=price,allowed_user=interaction.user)
                 
                 
-                embed = discord.Embed(title=f"License applying for:",description=f"{license_type}",color=discord.Color.greyple())
+                embed = discord.Embed(title="License applying for:",description=f"{license_type}",color=discord.Color.greyple())
                 embed.add_field(name="Description: ",value=description)
                 embed.add_field(name="Price",value=f"£{price}")
                 embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
