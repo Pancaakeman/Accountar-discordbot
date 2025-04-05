@@ -41,20 +41,7 @@ bot.owner_id = 732513701147574322
 #------------------------------------------
 #SUBPROGRAMS
 #------------------------------------------                
-async def check_collect_reset():
-    while True:
-        current = datetime.datetime.now()
-        reset_time = datetime.datetime(year=current.year, month=current.month, day=current.day,microsecond=current.microsecond, hour=0, minute=0, second=0)
-        
-        if current >= reset_time:
-            reset_time = reset_time + datetime.timedelta(days=1) 
-        
-        time_until_reset = (reset_time - current).total_seconds()
-        print(f"Time until reset: {time_until_reset} seconds")
-        await asyncio.sleep(time_until_reset)
-        await a.daily_reset_collect()
-        await asyncio.sleep(86400)
-        
+   
 
     
 async def load():
@@ -65,7 +52,6 @@ async def load():
             
 async def main():
     async with bot:
-        await a.daily_reset_collect()
         print("Tree Synced")
         await load()
         await bot.start(token=token)
@@ -78,8 +64,7 @@ async def main():
 #------------------------------------------
 @tasks.loop(seconds=30)
 async def change_status(): 
-    await bot.change_presence(status=discord.Status.idle)
-    await bot.change_presence(activity=discord.CustomActivity(name=next(status)))
+    await bot.change_presence(activity=discord.CustomActivity(name=next(status)),status=discord.Status.idle)
     
 
 
@@ -88,10 +73,9 @@ async def setup_hook():
     print("Synced")
 
 
-
+@bot.event
 async def on_ready(): 
     await change_status.start()
-    await check_collect_reset()
 
 
 
