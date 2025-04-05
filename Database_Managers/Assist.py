@@ -22,7 +22,7 @@ class Assister:
 
     async def create_account_salary(self,userid):
         async with aiosqlite.connect(self.database_file) as conn:      
-            async with conn.execute(f"SELECT * FROM history WHERE User = ?",(userid,)) as c:
+            async with conn.execute("SELECT * FROM history WHERE User = ?",(userid,)) as c:
                 c = await c.fetchone()                
                 if c is None:
                     await conn.execute('INSERT INTO history VALUES (?,?,?)',(userid,0,0)) 
@@ -44,11 +44,6 @@ class Assister:
                                         Role INT PRIMARY KEY,
                                         Income INT)""")
                 
-                await conn.execute("""CREATE TABLE IF NOT EXISTS history (
-                                        User INT PRIMARY KEY,
-                                        Last_collect INT,
-                                        Last_daily INT
-                                        )""")
                 await conn.execute("""CREATE TABLE IF NOT EXISTS licenses (
                                         User INT PRIMARY KEY,
                                         Fishing_License INT,
@@ -77,29 +72,6 @@ class Assister:
                     return False
                 
 #ALL OF THIS IS FOR COLLECT     
-    async def daily_reset_collect(self):
-        async with aiosqlite.connect(self.database_file) as conn:
-            async with conn.execute("SELECT * FROM money") as c:
-                rows = await c.fetchall()
-                for row in rows:
-                    user_id = row[0]
-                    await conn.execute('UPDATE history SET Last_collect = ? WHERE User = ?',(0,user_id))
-                    await conn.execute('UPDATE history SET Last_daily = ? WHERE User = ?',(0,user_id))
-            await conn.commit()
-                
-
-            return True
-
-    async def check_collect_history(self,userid):
-        async with aiosqlite.connect(self.database_file) as conn:
-            async with conn.execute("SELECT * FROM history WHERE User = ?",(userid,)) as c:
-                row = await c.fetchone()
-                if row[1] == 0:
-                    
-                    return False
-                else:
-                    
-                    return True
     async def role_check_collect(self,roles):
         async with aiosqlite.connect(self.database_file) as conn:
             async with conn.execute("SELECT * FROM roles WHERE Role = ?",(roles,)) as c:
@@ -139,12 +111,7 @@ class Assister:
                     return False
                 else:
                     return True
-                
-    async def switch_daily(self,userid):
-        async with aiosqlite.connect(self.database_file) as conn:
-            await conn.execute("UPDATE history SET Last_daily = ? WHERE User = ?",(1,userid)) 
-            await conn.commit()
-    
+                   
     async def role_salary_check(self,pItem):
         async with aiosqlite.connect(self.database_file) as conn:
             async with conn.execute("SELECT * from roles") as c:

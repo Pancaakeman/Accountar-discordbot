@@ -13,10 +13,10 @@ class Worker:
     async def create_acc(self,userid):
         async with aiosqlite.connect(self.database_file) as conn:      
            
-            async with conn.execute(f"SELECT * FROM money WHERE User = ?",(userid,)) as c:
+            async with conn.execute("SELECT * FROM money WHERE User = ?",(userid,)) as c:
                 c = await c.fetchone()
                 if c is None:
-                    await conn.execute('INSERT INTO money(User,Bank) VALUES (?,?)',(userid,0))
+                    await conn.execute('INSERT INTO money(User,Bank) VALUES (?,?)',(userid,100))
                     await conn.commit()        
                     return not None                       
                 else:
@@ -25,19 +25,18 @@ class Worker:
             
     async def display_bank(self,userid):
         async with aiosqlite.connect(self.database_file) as conn:
-            async with conn.execute(f"SELECT * FROM money WHERE User = ?",(userid,)) as c:
+            async with conn.execute("SELECT * FROM money WHERE User = ?",(userid,)) as c:
                 c = await c.fetchone()
                 return c 
                    
         
-    async def add_salary_role(self,role,income):
-        
+    async def add_salary_role(self,role,income): 
         async with aiosqlite.connect(self.database_file) as conn:
-            async with conn.execute(f"SELECT * FROM roles WHERE Role = ?",(role,)) as c:
+            async with conn.execute("SELECT * FROM roles WHERE Role = ?",(role,)) as c:
                 c = await c.fetchone()        
                 if c is None:
-                    test = await conn.execute('INSERT INTO roles(Role,Income) VALUES (?,?)',(role,income,))
-                    c = await conn.execute(f"SELECT * FROM roles WHERE Role = ?",(role,))
+                    await conn.execute('INSERT INTO roles(Role,Income) VALUES (?,?)',(role,income,))
+                    c = await conn.execute("SELECT * FROM roles WHERE Role = ?",(role,))
                     c = await c.fetchone()   
                     await conn.commit()                 
                     return c
@@ -47,7 +46,7 @@ class Worker:
     async def collect(self,user,role):
           
         async with aiosqlite.connect(self.database_file) as conn:
-            async with await conn.execute(f"SELECT * FROM roles WHERE Role = ?",(role,)) as c:
+            async with await conn.execute("SELECT * FROM roles WHERE Role = ?",(role,)) as c:
                 c = await c.fetchone()            
                 income = c[1]
                 user_check = await conn.execute("SELECT * FROM money WHERE User = ?", (user,)) 
@@ -80,8 +79,7 @@ class Worker:
                     print(new_balance)
                     if new_balance < 0:
                         new_balance = 0
-                        await conn.execute("UPDATE money SET Bank = ? WHERE User = ?",(new_balance,user,))
-                        await conn.commit()
+                    await conn.execute("UPDATE money SET Bank = ? WHERE User = ?",(new_balance,user,))
             await conn.commit()
               
             
