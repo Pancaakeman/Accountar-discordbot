@@ -52,8 +52,7 @@ class Worker:
                 user_check = await conn.execute("SELECT * FROM money WHERE User = ?", (user,)) 
                 user_check = await user_check.fetchone() 
                 new_balance = user_check[1] + income
-                await conn.execute('UPDATE money SET Bank = ? WHERE User = ?', (new_balance,user))
-                await conn.execute('UPDATE history SET Last_collect = ? WHERE User = ?',(1,user))                
+                await conn.execute('UPDATE money SET Bank = ? WHERE User = ?', (new_balance,user))              
                 return role,income
             await conn.commit()
         

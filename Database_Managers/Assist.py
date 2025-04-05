@@ -20,18 +20,6 @@ class Assister:
     def __init__(self,database_file):
         self.database_file = database_file
 
-    async def create_account_salary(self,userid):
-        async with aiosqlite.connect(self.database_file) as conn:      
-            async with conn.execute("SELECT * FROM history WHERE User = ?",(userid,)) as c:
-                c = await c.fetchone()                
-                if c is None:
-                    await conn.execute('INSERT INTO history VALUES (?,?,?)',(userid,0,0)) 
-                    await conn.commit()                   
-                    return True
-                else:
-                    return True
-
-
         
     async def create_table(self):
             async with aiosqlite.connect(self.database_file) as conn:
@@ -102,15 +90,6 @@ class Assister:
                 return not None
             else:
                 return not None
-    async def check_daily_history(self,userid):
-        async with aiosqlite.connect(self.database_file) as conn:
-            async with conn.execute("SELECT * FROM history WHERE User = ?",(userid,)) as c:
-                row = await c.fetchone()
-                if row[2] == 0:
-                    
-                    return False
-                else:
-                    return True
                    
     async def role_salary_check(self,pItem):
         async with aiosqlite.connect(self.database_file) as conn:
