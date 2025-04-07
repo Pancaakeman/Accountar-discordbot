@@ -23,10 +23,9 @@ class Accounts(commands.Cog):
     async def create_accountment(self,interaction :discord.Interaction):
         try:
             check1 = await self.k.create_acc(userid=interaction.user.id)
-            check2 = await self.a.create_account_salary(userid=interaction.user.id)
-            check3 = await self.a.initalize_licenses(user = interaction.user.id)
+            check2 = await self.a.initalize_licenses(user = interaction.user.id)
             
-            if check1 is not None and check2 is not None and check3 is not None:
+            if check1 is not None and check2 is not None:
                 embed= discord.Embed(title=f"A bank account has been successfully created for: {interaction.user.display_name}",colour=discord.Color.brand_green())
                 embed.add_field(name="Run `/account` to check out your account!",value="👏🥳🎉")
                 embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/7156/7156227.png")

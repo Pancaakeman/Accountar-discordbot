@@ -3,7 +3,6 @@ import asyncio
 from discord.ext import tasks,commands
 from itertools import cycle
 from Database_Managers import Assister, Worker
-import datetime
 import os
 import dotenv
 discord.utils.setup_logging()
@@ -15,7 +14,6 @@ token = os.environ.get("TOKEN")
 
 k = Worker("Databases/Warehouse.db")
 a = Assister("Databases/Warehouse.db")
-
 
 
 
@@ -39,7 +37,7 @@ bot.owner_id = 732513701147574322
 #------------------------------------------
 #SUBPROGRAMS
 #------------------------------------------                
-   
+
 
     
 async def load():

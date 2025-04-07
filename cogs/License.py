@@ -26,7 +26,7 @@ class Button_view(discord.ui.View):
         self.k = k        
         self.allowed_user = allowed_user
     @discord.ui.button(label="Confirm Purchase?",style=discord.ButtonStyle.green)
-    async def yes_button(self,interaction: discord.Interaction,Button: discord.ui.Button):
+    async def yes_button(self,interaction: discord.Interaction,button: discord.ui.Button):
         check = await self.k.license_add(user=interaction.user.id,license_name=self.license_type,license_cost = self.license_cost)  
         
         if interaction.user == self.allowed_user:

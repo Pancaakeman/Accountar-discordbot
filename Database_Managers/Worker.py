@@ -1,6 +1,5 @@
-from hmac import new
 import aiosqlite
-from Database_Managers import Assist,Assister
+from Database_Managers import Assister
 
 
 class Worker:
@@ -93,7 +92,7 @@ class Worker:
         
     async def coinflip_lose(self,user,amount):
         async with aiosqlite.connect(self.database_file) as conn:
-            async with conn.execute(f"SELECT * FROM money WHERE User = ?",(user,)) as c:
+            async with conn.execute("SELECT * FROM money WHERE User = ?",(user,)) as c:
                 c = await c.fetchone()
                 new_balance = c[1] - amount
                 await conn.execute('UPDATE money SET Bank = ? WHERE User = ?',(new_balance,user))
@@ -105,7 +104,7 @@ class Worker:
             async with aiosqlite.connect(self.database_file) as conn:
                 money_check =  await Assister(self.database_file).check_bal(user=user,amount=license_cost)
                 if money_check is not None:
-                    async with conn.execute(f"SELECT * FROM licenses WHERE User = ?",(user,)) as c:
+                    async with conn.execute("SELECT * FROM licenses WHERE User = ?",(user,)) as c:
                         og_c = await c.fetchone()
                         new_bal = money_check-license_cost
                         
@@ -130,7 +129,7 @@ class Worker:
     async def advanced_bank_view(self,user):
         try:
             async with aiosqlite.connect(self.database_file) as conn:
-                async with conn.execute(f"SELECT * FROM licenses WHERE User = ?",(user,)) as c:
+                async with conn.execute("SELECT * FROM licenses WHERE User = ?",(user,)) as c:
                     c = await c.fetchone()
         
         except Exception as e:
