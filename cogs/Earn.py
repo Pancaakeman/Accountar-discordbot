@@ -1,3 +1,5 @@
+from ast import Not
+from re import I
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -60,7 +62,7 @@ class Earn(commands.Cog):
         if isinstance(error, app_commands.errors.CommandOnCooldown):
             embed = discord.Embed(title="⚠️You have already Collected!⚠️", description=f"**Try again in `{str(datetime.timedelta(seconds=error.retry_after))}`**", color=discord.Color.brand_red())
             embed.set_author(name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url)
-            await interaction.response.send_message(embed=embed)
+            await interaction.response.send_message(embed=embed,ephemeral=True)
 
     @app_commands.command(name="daily",description="Claim you daily reward! ")
     @app_commands.checks.cooldown(1,86400)
@@ -83,7 +85,7 @@ class Earn(commands.Cog):
             embed = discord.Embed(title="Already Collected Today!",description=f"Try again later! in ```{str(datetime.timedelta(seconds=error.retry_after))}```",color=discord.Colour.brand_red())
             embed.set_footer(text="If you think this is a mistake, Contact an Admin!")
             embed.set_author(name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url)
-            await interaction.response.send_message(embed=embed)
+            await interaction.response.send_message(embed=embed,ephemeral=True)
 
 
     @app_commands.command(name="work",description="Work a Job to earn some money!")
@@ -105,10 +107,41 @@ class Earn(commands.Cog):
         if isinstance(error, app_commands.errors.CommandOnCooldown):
             embed = discord.Embed(title="You are on cooldown!", description=f"Try again in {str(datetime.timedelta(seconds=error.retry_after)):.2f} seconds",colour=discord.Color.red())
             embed.set_author(name=f"{interaction.user.global_name}", icon_url=interaction.user.avatar.url )    
-            await interaction.response.send_message(embed = embed)
+            await interaction.response.send_message(embed = embed,ephemeral=True)
         else: 
             raise error
+        
+    
+    @app_commands.command(name="rob",description="Rob a User!")
+    @app_commands.checks.cooldown(1,1200)
+    async def rob(self, interaction: discord.Interaction,user: discord.Member):
+        if self.a.account_check(interaction,interaction.user.id) is not None:
+            prob = random.randint(0, 3)
+
+            if prob < 3:
+                c = self.k.rob_user(robber = interaction.user.id,target = user.id)
+                if c is not None:
+                    embed = discord.Embed(title=f"{interaction.user.mention} just Commited a crime 🚨🚨",description=f"{interaction.user.mention} just robbed £{c} from {user.mention}  🚨🚨")
+                    embed.set_thumbnail(url = "https://cdn-icons-png.flaticon.com/128/2011/2011881.png")
+                    interaction.response.send_message(embed = embed)
+                else: 
+                    embed = discord.Embed(title="You attempted a robbery but there was nothing to Rob!")
+                    interaction.response.send_message(embed = embed,ephemeral=True)
+
+            else: 
+                fine = random.randint(50, 200)
+                self.k.remove_money(user=interaction.user.id,subtract = fine)
+                embed = discord.Embed(title= "Hands in the Air 🚨",description=f"{interaction.user.mention} was caught trying to rob {user.mention}!!")
+                embed.add_field(name=f"You were fined £{fine}")
+                interaction.response.send_message(embed= embed)
+
+    @rob.error
+    async def on_error(self,interaction: discord.Interaction,error: Exception):
+        embed = discord.Embed(title="You are on cooldown!", description=f"Try again in {str(datetime.timedelta(seconds=error.retry_after)):.2f} seconds",colour=discord.Color.red())
+        embed.set_author(name=f"{interaction.user.global_name}", icon_url=interaction.user.avatar.url )    
+        await interaction.response.send_message(embed = embed,ephemeral=True)
+        
 
 async def setup(bot):
-    await bot.add_cog(Earn(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))    
+    await bot.add_cog(Earn(bot,a = Assister("Warehouse.db"),k = Worker("Warehouse.db")))    
     

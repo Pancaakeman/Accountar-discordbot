@@ -34,12 +34,12 @@ class Button_view(discord.ui.View):
                 embed = discord.Embed(title="😷Too Poor!",description="Earn More money to purchase",color=discord.Color.brand_red())
                 embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/8125/8125441.png")
                 embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
-                await interaction.response.send_message(embed=embed)
+                await interaction.response.send_message(embed=embed,ephemeral=True)
                 
             elif check is True:
-                await interaction.response.send_message(embed = discord.Embed(title="**Purchased!**",description=f"**{self.license_cost} has been debited from your account!** ",color=discord.Colour.brand_green()))
+                await interaction.response.send_message(embed = discord.Embed(title="**Purchased!**",description=f"**{self.license_cost} has been debited from your account!** ",color=discord.Colour.brand_green()),ephemeral=True)
             elif check is None:
-                await interaction.response.send_message(embed = discord.Embed(title="**Already Owned!**",description="**You already own this License** ",color=discord.Colour.brand_green()))
+                await interaction.response.send_message(embed = discord.Embed(title="**Already Owned!**",description="**You already own this License** ",color=discord.Colour.brand_green()),ephemeral=True)
    
         else:
             await interaction.response.send_message(content="You are not allowed to access this button!", ephemeral=True)
@@ -71,7 +71,7 @@ class License(commands.Cog):
                 if specific_license: 
                     price =  specific_license['price']
                     description = specific_license['description'] 
-                view = Button_view(license_type=license_type,k= Worker("Databases/Warehouse.db"),license_cost=price,allowed_user=interaction.user)
+                view = Button_view(license_type=license_type,k= Worker("Warehouse.db"),license_cost=price,allowed_user=interaction.user)
                 
                 
                 embed = discord.Embed(title="License applying for:",description=f"{license_type}",color=discord.Color.greyple())
@@ -79,11 +79,11 @@ class License(commands.Cog):
                 embed.add_field(name="Price",value=f"£{price}")
                 embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
                 embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/11725/11725853.png")
-                await interaction.response.send_message(embed = embed,view=view)        
+                await interaction.response.send_message(embed = embed,view=view,ephemeral=True)        
         except Exception as e:
             print(e)
 
         
 async def setup(bot):
-    await bot.add_cog(License(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))    
+    await bot.add_cog(License(bot,a = Assister("Warehouse.db"),k = Worker("Warehouse.db")))    
         

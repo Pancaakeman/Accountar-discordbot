@@ -57,5 +57,5 @@ class Minigames(commands.Cog):
     
             
 async def setup(bot):
-    await bot.add_cog(Minigames(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))    
+    await bot.add_cog(Minigames(bot,a = Assister("Warehouse.db"),k = Worker("Warehouse.db")))    
         

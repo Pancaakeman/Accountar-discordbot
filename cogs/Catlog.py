@@ -53,5 +53,5 @@ class Catlog(commands.Cog):
     
            
 async def setup(bot):
-    await bot.add_cog(Catlog(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))
+    await bot.add_cog(Catlog(bot,a = Assister("Warehouse.db"),k = Worker("Warehouse.db")))
     
