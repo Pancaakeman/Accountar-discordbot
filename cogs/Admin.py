@@ -116,6 +116,7 @@ class Admin(commands.Cog):
         except Exception as e:
             print(e)
         
+    
 async def setup(bot):
-    await bot.add_cog(Admin(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))    
+    await bot.add_cog(Admin(bot,a = Assister("Warehouse.db"),k = Worker("Warehouse.db")))    
     

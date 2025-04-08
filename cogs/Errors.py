@@ -19,4 +19,4 @@ class Errors(commands.Cog):
 
                
 async def setup(bot):
-    await bot.add_cog(Errors(bot,a = Assister("Databases/Warehouse.db"),k = Worker("Databases/Warehouse.db")))
+    await bot.add_cog(Errors(bot,a = Assister("Warehouse.db"),k = Worker("Warehouse.db")))

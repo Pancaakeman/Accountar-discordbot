@@ -12,8 +12,8 @@ env = dotenv.load_dotenv()
 token = os.environ.get("TOKEN")
 
 
-k = Worker("Databases/Warehouse.db")
-a = Assister("Databases/Warehouse.db")
+k = Worker("Warehouse.db")
+a = Assister("Warehouse.db")
 
 
 
