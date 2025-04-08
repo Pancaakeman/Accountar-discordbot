@@ -4,12 +4,9 @@ from discord.ext import tasks,commands
 from itertools import cycle
 from Database_Managers import Assister, Worker
 import os
-import dotenv
-discord.utils.setup_logging()
 
-#Variables
-env = dotenv.load_dotenv()
-token = os.environ.get("TOKEN")
+with open('token.txt',"r") as f:
+    token = f.read()
 
 
 k = Worker("Warehouse.db")
