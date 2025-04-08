@@ -123,17 +123,17 @@ class Earn(commands.Cog):
                 if prob < 3:
                     c = await self.k.rob_user(robber = interaction.user.id,target = user.id)
                     if c is not None:
-                        embed = discord.Embed(title=f"{interaction.user.mention} just Commited a crime 🚨🚨",description=f"{interaction.user.mention} just robbed £{c} from {user.mention}  🚨🚨")
+                        embed = discord.Embed(title=f"{interaction.user.mention} just Commited a crime 🚨🚨",description=f"{interaction.user.mention} just robbed £{c} from {user.mention}  🚨🚨",color=discord.Color.random())
                         embed.set_thumbnail(url = "https://cdn-icons-png.flaticon.com/128/2011/2011881.png")
                         await interaction.response.send_message(embed = embed)
                     else: 
-                        embed = discord.Embed(title="You attempted a robbery but there was nothing to Rob!")
+                        embed = discord.Embed(title="You attempted a robbery but there was nothing to Rob!",color=discord.Color.dark_magenta())
                         await interaction.response.send_message(embed = embed,ephemeral=True)
 
                 else: 
                     fine = random.randint(50, 200)
                     await self.k.remove_money(user=interaction.user.id,subtract = fine)
-                    embed = discord.Embed(title= "Hands in the Air 🚨",description=f"{interaction.user.mention} was caught trying to rob {user.mention}!!")
+                    embed = discord.Embed(title= "Hands in the Air 🚨",description=f"{interaction.user.mention} was caught trying to rob {user.mention}!!",color=discord.Color.brand_red())
                     embed.add_field(name=f"You were fined £{fine}",value="")
                     await interaction.response.send_message(embed= embed)
         else:
