@@ -14,6 +14,10 @@ class Task(commands.Cog):
     def __init__(self,bot):
         self.bot = bot
 
+    @commands.Cog.listener
+    async def on_ready(self):
+        print(self.__class__.__name__, "Cog has been loaded")
+
     @app_commands.command(name="slap",description="Slap a user!")
     async def slap(self, interaction: discord.Interaction,user: discord.Member):
         num = random.randint(0, 9)
