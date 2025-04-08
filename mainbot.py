@@ -4,6 +4,7 @@ from discord.ext import tasks,commands
 from itertools import cycle
 from Database_Managers import Assister, Worker
 import os
+discord.utils.setup_logging()
 
 with open('token.txt',"r") as f:
     token = f.read()
