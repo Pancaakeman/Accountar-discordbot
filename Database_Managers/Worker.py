@@ -143,12 +143,14 @@ class Worker:
 
     async def rob_user(self,robber, target):
         async with aiosqlite.connect(self.database_file) as conn:
-            async with conn.execute("SELECT * FROM money WHERE User = ?",{target,}) as c:
-                c = c.fetchone()
+            async with conn.execute("SELECT * FROM money WHERE User = ?",(target,)) as c:
+                c = await c.fetchone()
             if c[1] > 0:
                 percent = (c[1] * random.randint(5,10))//100
                 await conn.execute("UPDATE money SET Bank = ? WHERE User = ?",(c[1] - percent,target))
-                await conn.execute("UPDATE money SET Bank = ? WHERE User = ? "(percent,robber))
+                robber_acc = await conn.execute("SELECT * FROM money WHERE User = ?",(robber))
+                robber_acc = await robber_acc.fetchone()
+                await conn.execute("UPDATE money SET Bank = ? WHERE User = ? ",(percent + robber_acc[1],robber))
                 return percent
             else: 
                 return False

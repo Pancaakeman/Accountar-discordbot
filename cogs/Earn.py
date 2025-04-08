@@ -115,25 +115,29 @@ class Earn(commands.Cog):
     @app_commands.command(name="rob",description="Rob a User!")
     @app_commands.checks.cooldown(1,1200)
     async def rob(self, interaction: discord.Interaction,user: discord.Member):
-        if self.a.account_check(interaction,interaction.user.id) is not None:
-            prob = random.randint(0, 3)
+        if interaction.user != user:        
+            acc_check = await self.a.account_check(interaction=interaction, user=interaction.user.id)
+            if acc_check is not None:
+                prob = random.randint(0, 3)
 
-            if prob < 3:
-                c = await self.k.rob_user(robber = interaction.user.id,target = user.id)
-                if c is not None:
-                    embed = discord.Embed(title=f"{interaction.user.mention} just Commited a crime 🚨🚨",description=f"{interaction.user.mention} just robbed £{c} from {user.mention}  🚨🚨")
-                    embed.set_thumbnail(url = "https://cdn-icons-png.flaticon.com/128/2011/2011881.png")
-                    interaction.response.send_message(embed = embed)
+                if prob < 3:
+                    c = await self.k.rob_user(robber = interaction.user.id,target = user.id)
+                    if c is not None:
+                        embed = discord.Embed(title=f"{interaction.user.mention} just Commited a crime 🚨🚨",description=f"{interaction.user.mention} just robbed £{c} from {user.mention}  🚨🚨")
+                        embed.set_thumbnail(url = "https://cdn-icons-png.flaticon.com/128/2011/2011881.png")
+                        await interaction.response.send_message(embed = embed)
+                    else: 
+                        embed = discord.Embed(title="You attempted a robbery but there was nothing to Rob!")
+                        await interaction.response.send_message(embed = embed,ephemeral=True)
+
                 else: 
-                    embed = discord.Embed(title="You attempted a robbery but there was nothing to Rob!")
-                    interaction.response.send_message(embed = embed,ephemeral=True)
-
-            else: 
-                fine = random.randint(50, 200)
-                await self.k.remove_money(user=interaction.user.id,subtract = fine)
-                embed = discord.Embed(title= "Hands in the Air 🚨",description=f"{interaction.user.mention} was caught trying to rob {user.mention}!!")
-                embed.add_field(name=f"You were fined £{fine}",value="")
-                interaction.response.send_message(embed= embed)
+                    fine = random.randint(50, 200)
+                    await self.k.remove_money(user=interaction.user.id,subtract = fine)
+                    embed = discord.Embed(title= "Hands in the Air 🚨",description=f"{interaction.user.mention} was caught trying to rob {user.mention}!!")
+                    embed.add_field(name=f"You were fined £{fine}",value="")
+                    await interaction.response.send_message(embed= embed)
+        else:
+            await interaction.response.send_message("You cannot Rob yourself!",ephemeral=True)
 
     @rob.error
     async def on_error(self,interaction: discord.Interaction,error: Exception):
