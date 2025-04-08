@@ -105,7 +105,7 @@ class Earn(commands.Cog):
     @work.error
     async def work_error(self, interaction: discord.Interaction, error: Exception):
         if isinstance(error, app_commands.errors.CommandOnCooldown):
-            embed = discord.Embed(title="You are on cooldown!", description=f"Try again in {str(datetime.timedelta(seconds=error.retry_after)):.2f} seconds",colour=discord.Color.red())
+            embed = discord.Embed(title="You are on cooldown!", description=f"Try again in {str(datetime.timedelta(seconds=error.retry_after)):.2f}",colour=discord.Color.red())
             embed.set_author(name=f"{interaction.user.global_name}", icon_url=interaction.user.avatar.url )    
             await interaction.response.send_message(embed = embed,ephemeral=True)
         else: 
@@ -115,8 +115,8 @@ class Earn(commands.Cog):
     @app_commands.command(name="rob",description="Rob a User!")
     @app_commands.checks.cooldown(1,1200)
     async def rob(self, interaction: discord.Interaction,user: discord.Member):
-        if interaction.user != user:        
-            acc_check = await self.a.account_check(interaction=interaction, user=interaction.user.id)
+        #if interaction.user != user:        
+            acc_check = await self.a.account_check(interaction=interaction, user=user.id)
             if acc_check is not None:
                 prob = random.randint(0, 3)
 
@@ -124,7 +124,7 @@ class Earn(commands.Cog):
                     c = await self.k.rob_user(robber = interaction.user.id,target = user.id)
                     if c is not None:
                         embed = discord.Embed(title=f"{interaction.user.mention} just Commited a crime 🚨🚨",description=f"{interaction.user.mention} just robbed £{c} from {user.mention}  🚨🚨",color=discord.Color.random())
-                        embed.set_thumbnail(url = "https://cdn-icons-png.flaticon.com/128/2011/2011881.png")
+                        embed.set_thumbnail(url = "https://cdn-icons-png.flaticon.com/128/9875/9875340.png")
                         await interaction.response.send_message(embed = embed)
                     else: 
                         embed = discord.Embed(title="You attempted a robbery but there was nothing to Rob!",color=discord.Color.dark_magenta())
@@ -136,13 +136,16 @@ class Earn(commands.Cog):
                     embed = discord.Embed(title= "Hands in the Air 🚨",description=f"{interaction.user.mention} was caught trying to rob {user.mention}!!",color=discord.Color.brand_red())
                     embed.add_field(name=f"You were fined £{fine}",value="")
                     await interaction.response.send_message(embed= embed)
-        else:
-            await interaction.response.send_message("You cannot Rob yourself!",ephemeral=True)
+            else:
+                await interaction.response.send_message("Targetted User does not have an Account!",ephemeral=True)
+        
+        #else:
+        #    await interaction.response.send_message("You cannot Rob yourself!",ephemeral=True)
 
     @rob.error
     async def on_error(self,interaction: discord.Interaction,error: Exception):
         if isinstance(error, app_commands.errors.CommandOnCooldown):
-            embed = discord.Embed(title="You are on cooldown!", description=f"Try again in {str(datetime.timedelta(seconds=error.retry_after)):.2f} seconds",colour=discord.Color.red())
+            embed = discord.Embed(title="You are on cooldown!", description=f"Try again in {datetime.timedelta(seconds=error.retry_after)}",colour=discord.Color.red())
             embed.set_author(name=f"{interaction.user.global_name}", icon_url=interaction.user.avatar.url )    
             await interaction.response.send_message(embed = embed,ephemeral=True)
         

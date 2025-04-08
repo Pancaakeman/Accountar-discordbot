@@ -50,7 +50,7 @@ class Assister:
                 
                 
                 if c is None:
-                    embed = discord.Embed(title="User does not have an account",description="Please create an account using `/create_account`",color=discord.Color.red())
+                    embed = discord.Embed(title=f"<@{user}> does not have an account",description="Please create an account using `/create_account`",color=discord.Color.red())
                     embed.set_footer(text="If you think this is a mistake, Contact an Admin")
                     embed.set_author( name=f"{interaction.user.name}", icon_url=interaction.user.avatar.url )
                     embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/128/2748/2748614.png")
