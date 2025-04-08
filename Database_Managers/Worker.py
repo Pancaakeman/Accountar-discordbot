@@ -1,3 +1,4 @@
+from traceback import print_exception
 import aiosqlite
 from Database_Managers import Assister
 import random
@@ -149,10 +150,13 @@ class Worker:
 
                 percent = (c[1] * random.randint(5,10))//100
                 await conn.execute("UPDATE money SET Bank = ? WHERE User = ?",(c[1] - percent,target))
+                print(c)
                 acc = await conn.execute("SELECT * FROM money WHERE User = ?",(robber,))
+                print(acc)
                 robber_acc = await acc.fetchone()
                 print(robber_acc)
                 await conn.execute("UPDATE money SET Bank = ? WHERE User = ? ",(percent + robber_acc[1],robber))
+                await conn.commit()
                 return percent
             else: 
                 return False
