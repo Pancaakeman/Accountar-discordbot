@@ -146,10 +146,12 @@ class Worker:
             async with conn.execute("SELECT * FROM money WHERE User = ?",(target,)) as c:
                 c = await c.fetchone()
             if c[1] > 0:
+
                 percent = (c[1] * random.randint(5,10))//100
                 await conn.execute("UPDATE money SET Bank = ? WHERE User = ?",(c[1] - percent,target))
-                robber_acc = await conn.execute("SELECT * FROM money WHERE User = ?",(robber))
-                robber_acc = await robber_acc.fetchone()
+                acc = await conn.execute("SELECT * FROM money WHERE User = ?",(robber,))
+                robber_acc = await acc.fetchone()
+                print(robber_acc)
                 await conn.execute("UPDATE money SET Bank = ? WHERE User = ? ",(percent + robber_acc[1],robber))
                 return percent
             else: 
