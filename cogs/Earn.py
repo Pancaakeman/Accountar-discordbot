@@ -122,7 +122,7 @@ class Earn(commands.Cog):
 
                 if prob < 3:
                     c = await self.k.rob_user(robber = interaction.user.id,target = user.id)
-                    if c is not None:
+                    if c is not False:
                         embed = discord.Embed(title=f"{interaction.user.mention} just Commited a crime 🚨🚨",description=f"{interaction.user.mention} just robbed £{c} from {user.mention}  🚨🚨",color=discord.Color.random())
                         embed.set_thumbnail(url = "https://cdn-icons-png.flaticon.com/128/9875/9875340.png")
                         await interaction.response.send_message(embed = embed)
