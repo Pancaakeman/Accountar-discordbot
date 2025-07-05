@@ -105,7 +105,7 @@ class Earn(commands.Cog):
     @work.error
     async def work_error(self, interaction: discord.Interaction, error: Exception):
         if isinstance(error, app_commands.errors.CommandOnCooldown):
-            embed = discord.Embed(title="You are on cooldown!", description=f"Try again in {str(datetime.timedelta(seconds=error.retry_after)):.2f}",colour=discord.Color.red())
+            embed = discord.Embed(title=f"You are too Tired, Take a Rest!!", description=f"Try again in {datetime.timedelta(seconds=error.retry_after)}",colour=discord.Color.red())
             embed.set_author(name=f"{interaction.user.global_name}", icon_url=interaction.user.avatar.url )    
             await interaction.response.send_message(embed = embed,ephemeral=True)
         else: 

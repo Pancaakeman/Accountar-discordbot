@@ -1,5 +1,4 @@
 import random
-from turtle import title
 import discord
 from discord.ext import commands
 from discord import Button, app_commands
@@ -27,21 +26,21 @@ class Task(commands.Cog):
 
     @app_commands.command(name="hug",description="Hug a user!")
     async def hug(self, interaction: discord.Interaction,user: discord.Member):
-        num = random.randint(0, 9)
+        num = random.randint(0, 8)
         embed = discord.Embed(description=f"{interaction.user.mention} hugged {user.mention}!!",color=discord.Color.random())
         embed.set_image(url=data["hugging"][num])
         await interaction.response.send_message(embed=embed)
 
-    @app_commands.command(name="high-five",description="Punch a user!")
-    async def slap(self, interaction: discord.Interaction,user: discord.Member):
-        num = random.randint(0, 9)
+    @app_commands.command(name="highfive",description="High five a user!")
+    async def highfive(self, interaction: discord.Interaction,user: discord.Member):
+        num = random.randint(0, 4)
         embed = discord.Embed(description=f"{interaction.user.mention} high-fived {user.mention}!!",color=discord.Color.random())
         embed.set_image(url=data["high-five"][num])
         await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="punch",description="Punch a user!")
-    async def slap(self, interaction: discord.Interaction,user: discord.Member):
-        num = random.randint(0, 9)
+    async def punch(self, interaction: discord.Interaction,user: discord.Member):
+        num = random.randint(0, 5)
         embed = discord.Embed(description=f"{interaction.user.mention} punched {user.mention}!!",color=discord.Color.random())
         embed.set_image(url=data["punch"][num])
         await interaction.response.send_message(embed=embed)
